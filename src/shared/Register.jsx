@@ -1,52 +1,130 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-
+import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router";
+import { updateProfile } from "firebase/auth";
 
 const Register = () => {
-    const {createUser} = useContext(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
+  const {createUser } = useContext(AuthContext);
 
-    const handleRagister = e => {
-        e.preventDefault();
-        const form = e.target;
-        const email = form.email.value;
-        const password = form.password.value;
-        console.log(email, password);
+  const handleRegister = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const photo = form.photo.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    console.log(name, photo, email, password);
+    
+    // const formData = new FormData(form);
+    // const data = Object.fromEntries(formData.entries());
+    // console.log(data);
 
 
-        //create user
-        createUser(email, password)
-        .then(result => {
-            console.log(result.user);
-        })
-        .catch(error => {
-            console.log(error.message);
-        })
+    //update user profile
+    createUser(email, password)
+  .then((result) => {
+    console.log(result.user);
+    updateProfile(result.user, {
+      displayName: name,
+      photoURL: photo,
+    }).then(() => {
+      toast.success("User Updated Profile Successfully!");
+    });
+  })
+  .catch((error) => {
+    console.log(error.message);
+  });
 
-    }
+
+    //create user
+    createUser(email, password)
+      .then((result) => {
+        console.log(result.user);
+        toast.success("User Registered Successfully!");
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
   return (
-    <div className="hero bg-base-200 min-h-screen">
-      <div className="hero-content flex-col lg:flex-row-reverse">
-        {/* <div className="text-center lg:text-left">
-            <Lottie style={{width: '200px'}} animationData={registerLottie} loop={true}></Lottie>
-        </div> */}
-        <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-          <div className="card-body">
-          <h1 className="text-3xl font-bold">Register now!</h1>
-          <form onSubmit={handleRagister}>
-               <fieldset className="fieldset">
-              <label className="label">Email</label>
-              <input type="email" className="input" name="email" placeholder="Email" required />
-              <label className="label">Password</label>
-              <input type="password" className="input" name="password" placeholder="Password"  required/>
-              <div>
-                <a className="link link-hover">Forgot password?</a>
-              </div>
-              <button className="btn btn-neutral mt-4">Register</button>
-            </fieldset>
-          </form>
-          </div>
-        </div>
-      </div>
+    <div className=" max-w-sm mx-auto  p-9 rounded-2xl mt-9 shadow-lg bg-base-200 mb-12">
+      <h2 className="text-3xl mb-9">Please Register Now </h2>
+      <form className="space-y-4" onSubmit={handleRegister}>
+        {/* name field */}
+        <label className="label"> Name : </label>
+        <input
+          type="text"
+          className="input"
+          name="name"
+          placeholder="Enter Your Name "
+          required
+        />
+        {/* Photo-URL field */}
+
+        <label className="label"> Photo-URL : </label>
+        <input
+          type="text"
+          className="input"
+          name="photo"
+          placeholder="Enter Your Photo-URL "
+        />
+
+        <label className="label">Email : </label>
+        <input
+          type="email"
+          className="input"
+          name="email"
+          placeholder="Enter Your Email"
+          required
+        />
+
+        <br />
+        {/* Password field */}
+        <label className="label">Password : </label>
+        <label className="input validator">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            required
+            placeholder="Password"
+            minLength="6"
+            pattern="(?=.*[a-z])(?=.*[A-Z]).{6,}"
+            title="Must be more than 6 characters, lowercase letter, uppercase letter"
+          />
+          <button
+            onClick={() => {
+              setShowPassword(!showPassword);
+            }}
+            type="button"
+            className="btn btn-xs absolute top-2 right-8"
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        </label>
+        <p className="validator-hint hidden">
+          Must be more than 6 characters, including
+          <br />
+          {/* At least one number <br /> */}
+          At least one lowercase letter <br />
+          At least one uppercase letter
+        </p>
+        <br />
+        {/* Submit Button */}
+
+        <button type="submit" className="btn btn-neutral w-full mt-4">
+          Register
+        </button>
+      </form>
+
+      <p className="mt-3">
+        Already have an account? Please{" "}
+        <Link to="/login" className=" text-blue-500 underline">
+          Login
+        </Link>
+      </p>
     </div>
   );
 };

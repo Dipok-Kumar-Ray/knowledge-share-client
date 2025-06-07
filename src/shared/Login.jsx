@@ -1,10 +1,12 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
+import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import SocialLogin from "./SocialLogin";
 
 const Login = () => {
-
+  const [showPassword, setShowPassword] = useState(false);
   const {userLogin} = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
@@ -25,6 +27,7 @@ const Login = () => {
           .then(result => {
               console.log(result.user);
               navigate(from);
+              toast.success('User Logged In Successfully!')
           })
           .catch(error => {
               console.log(error.message);
@@ -33,31 +36,60 @@ const Login = () => {
       }
    
   return (
-  <div className="hero bg-base-200 min-h-screen">
-      <div className="hero-content flex-col lg:flex-row-reverse">
-        {/* <div className="text-center lg:text-left">
-            <Lottie style={{width: '250px'}} animationData={loginLottie} loop={true}></Lottie>
-        </div> */}
-        <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-          <div className="card-body">
-          <h1 className="text-3xl font-bold">Login now!</h1>
-          <form onSubmit={handleLogin}>
-               <fieldset className="fieldset">
-              <label className="label">Email</label>
-              <input type="email" className="input" name="email" placeholder="Email" required />
-              <label className="label">Password</label>
-              <input type="password" className="input" name="password" placeholder="Password"  required/>
-              <div>
-                <a className="link link-hover">Forgot password?</a>
-              </div>
-              <button className="btn btn-neutral mt-4">Login</button>
-            </fieldset>
+ <div className=" mt-8 mb-9 mx-auto card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+        <div className="card-body">
+          <h1 className="text-center text-3xl font-semi-bold ">Login now </h1>
+          <form onSubmit={handleLogin} className="fieldset">
+            {/* email */}
+            <label className="label">Email : </label>
+            <input
+              type="email"
+              className="input"
+              name="email"
+              placeholder="Enter Your Email"
+            />
+            {/* password */}
+            <label className="label">Password : </label>
+            <div className="relative">
+             <input
+               type={showPassword ? "text" : "password"}
+               name="password"
+               className="input"
+               placeholder="Password"
+               required
+             />
+            <button
+               onClick={() => {
+                 setShowPassword(!showPassword);
+               }}
+               type="button"
+              
+               className="btn btn-xs absolute top-2 right-8"
+             >
+               {showPassword ? <FaEyeSlash /> : <FaEye />}
+             </button>
+            </div>
+            <div>
+              {/* forgot password */}
+              <button onClick='' type="button" className="link link-hover">Forgot password?</button>
+            </div>
+           
+           {/* <Link to='/'> */}
+             <p  type="submit" className="w-full btn btn-neutral mt-4">
+              Login
+            </p>
+           {/* </Link> */}
           </form>
-          <SocialLogin from={from}/>
-          </div>
+          <SocialLogin  from={from} />
+          <p className="mt-2 text-center">
+            New to this site? Please 
+            <Link className="text-blue-500 underline" to="/register">
+              Rigister
+            </Link>
+          </p>
+       
         </div>
       </div>
-    </div>
   );
 };
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
 
 
@@ -17,15 +17,25 @@ const [loading, setLoading] = useState(true);
     }
 
     //register login user
-    const createUser = (email, password) => {
+    const createUser = (email, password, name, photo ) => {
         setLoading(true);
         return createUserWithEmailAndPassword(auth, email, password)
+        .then((result) => {
+            return updateProfile(result.user, {
+                displayName: name,
+                photoURL: photo,
+            })
+            .then(() => {
+                return result;
+            })
+        })
     }
 
     //login user
     const userLogin = (email, password) => {
         setLoading(true);
         return createUserWithEmailAndPassword(auth, email, password)
+        
     }
 
     //sign out user
