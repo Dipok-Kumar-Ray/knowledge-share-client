@@ -3,6 +3,7 @@ import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
 import Login from "../shared/Login";
 import Register from "../shared/Register";
+import ErrorPage from "../pages/ErrorPage";
 
 
 
@@ -27,6 +28,10 @@ import Register from "../shared/Register";
       
     ]
     
+  },
+  {
+    path: '*',
+    Component: ErrorPage,
   }
 
 ])
