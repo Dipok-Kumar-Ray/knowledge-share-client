@@ -1,9 +1,12 @@
 import React from 'react';
+import Motion from './Motion';
+import HeroSlider from './HeroSlider';
 
 const Home = () => {
     return (
         <div>
-            <h2>this is home...</h2>
+            <HeroSlider/>
+            <Motion/>
         </div>
     );
 };
