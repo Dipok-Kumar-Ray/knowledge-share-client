@@ -1,8 +1,4 @@
-// src/components/HeroSlider.jsx
-
-// import { Link } from 'react-router-dom';
-// import Slider from 'react-slick';
-// import { motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const slides = [
   {
@@ -43,11 +39,11 @@ const HeroSlider = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 700,
+    speed: 400,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 6000,
+    autoplaySpeed: 4000,
     arrows: false,
   };
 
@@ -57,7 +53,7 @@ const HeroSlider = () => {
         {slides.map((slide, index) => (
           <div key={index}>
             <div
-              className="h-[500px] md:h-[600px] bg-cover bg-center flex items-center justify-center"
+              className="h-[300px] md:h-[400px] bg-cover bg-center flex items-center justify-center"
               style={{
                 backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.75)), url(${slide.backgroundImage})`,
               }}
