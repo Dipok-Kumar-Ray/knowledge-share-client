@@ -4,6 +4,7 @@ import Home from "../pages/Home";
 import Login from "../shared/Login";
 import Register from "../shared/Register";
 import ErrorPage from "../pages/ErrorPage";
+import PostArticles from "../components/PostArticles";
 
 
 
@@ -24,7 +25,13 @@ import ErrorPage from "../pages/ErrorPage";
       {
         path:'register',
         Component: Register,
-      }
+      }, 
+      {
+        path:'postArticles',
+        Component: PostArticles,
+
+      },
+      
       
     ]
     
