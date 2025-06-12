@@ -5,6 +5,7 @@ import Login from "../shared/Login";
 import Register from "../shared/Register";
 import ErrorPage from "../pages/ErrorPage";
 import PostArticles from "../components/PostArticles";
+import AllArticle from "../components/AllArticle";
 
 
 
@@ -16,7 +17,8 @@ import PostArticles from "../components/PostArticles";
     children: [
       {
         index: true,
-        Component: Home
+        Component: Home,
+        loader:() =>  fetch('http://localhost:3000/articles')
       },
       {
         path: 'login',
@@ -31,7 +33,11 @@ import PostArticles from "../components/PostArticles";
         Component: PostArticles,
 
       },
-      
+      {
+        path: 'allArticle',
+        Component: AllArticle,
+        loader:() => fetch('http://localhost:3000/articles'),
+      }
       
     ]
     

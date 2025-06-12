@@ -6,7 +6,7 @@ const PostArticles = () => {
     const handleAddArticle = e => {
         e.preventDefault();
 
-        const form = e.target.value;
+        const form = e.target;
         const formData = new FormData(form);
         const articles = Object.fromEntries(formData.entries());
         console.log(articles);
@@ -27,10 +27,10 @@ const PostArticles = () => {
                     title: 'Success!',
                     text: 'Your article has been added successfully.',
                     icon: 'success',
-                    confirmButtonText: 'Cool',
+                    // confirmButtonText: 'Cool',
                     draggable:true
                 })
-                
+                form.reset();
             }
         })
     }
@@ -109,6 +109,21 @@ const PostArticles = () => {
           />
         </div>
 
+         {/* Author Name Input Field */}
+        <div>
+            <label htmlFor="authorName" className="label">
+            <span className="label-text text-lg font-semibold">Author Name <span className="text-error">*</span></span>
+            </label>
+            <input
+            type="text"
+            name="authorName"
+            placeholder="Author Name"
+            className="input input-bordered input-primary w-full text-base"
+            required
+            aria-label="Author Name"
+            />
+        </div>
+
         {/* Thumbnail Image URL Input Field (Optional) */}
         <div className="form-control">
           <label htmlFor="thumbnailUrl" className="label">
@@ -117,7 +132,7 @@ const PostArticles = () => {
           <input
             type="url"
             name="photoUrl"
-            placeholder="e.g., https://your-image-host.com/article-thumb-01.jpg"
+            placeholder="Photo URL"
             className="input input-bordered input-primary w-full text-base"
             aria-label="Thumbnail Image URL"
           />
