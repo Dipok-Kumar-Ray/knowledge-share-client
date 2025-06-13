@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import profileImg from "../assets/avator.png.webp"
 import { Link, NavLink } from "react-router";
+import './navbar.css';
+
 
 const Navbar = () => {
   const { user, signout } = useContext(AuthContext);

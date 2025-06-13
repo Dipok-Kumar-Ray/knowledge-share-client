@@ -10,7 +10,7 @@ const slides = [
     description:
       'Write, share, and learn with a community that values knowledge. Start your journey today!',
     button: 'Explore Articles',
-    link: '/articles',
+    link: '/allArticle',
     backgroundLayers: [
       'https://images.unsplash.com/photo-1584697964403-c180f49b2733?auto=format&fit=crop&w=1600&q=80',
       'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=50',
@@ -21,8 +21,8 @@ const slides = [
     title: 'Teach What You Love',
     description:
       'Share your passion and help others grow by writing meaningful articles and guides.',
-    button: 'Start Writing',
-    link: '/articles',
+    button: 'Explore Articles',
+    link: '/allArticle',
     backgroundLayers: [
       'https://images.unsplash.com/photo-1603575449156-de664c6a28c4?auto=format&fit=crop&w=1600&q=80',
       'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=50',
@@ -33,8 +33,8 @@ const slides = [
     title: 'Learn. Share. Grow.',
     description:
       'Be part of EduHive and connect with thousands of learners and educators.',
-    button: 'Join Now',
-    link: '/articles',
+    button: 'Explore Articles',
+    link: '/allArticle',
     backgroundLayers: [
       'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1600&q=80',
       'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=800&q=50',

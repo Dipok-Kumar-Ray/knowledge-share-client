@@ -7,7 +7,9 @@ const MainLayout = () => {
     return (
         <div>
             <Navbar/>
-            <Outlet/>
+           <main style={{ minHeight: 'calc(100vh - 137px)' }} className='flex justify-center items-center' >
+             <Outlet/>
+           </main>
             <Footer/>
         </div>
     );

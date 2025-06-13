@@ -6,6 +6,7 @@ import Register from "../shared/Register";
 import ErrorPage from "../pages/ErrorPage";
 import PostArticles from "../components/PostArticles";
 import AllArticle from "../components/AllArticle";
+import ArticleDetailsPage from "../components/ArticleDetailsPage";
 
 
 
@@ -18,7 +19,7 @@ import AllArticle from "../components/AllArticle";
       {
         index: true,
         Component: Home,
-        loader:() =>  fetch('http://localhost:3000/articles')
+        loader:() =>  fetch('http://localhost:4000/articles')
       },
       {
         path: 'login',
@@ -36,7 +37,12 @@ import AllArticle from "../components/AllArticle";
       {
         path: 'allArticle',
         Component: AllArticle,
-        loader:() => fetch('http://localhost:3000/articles'),
+        loader:() => fetch('http://localhost:4000/articles'),
+      },
+      {
+        path:'articleDetails/:id',
+        Component: ArticleDetailsPage,
+        loader: () => fetch('http://localhost:4000/articles')
       }
       
     ]
