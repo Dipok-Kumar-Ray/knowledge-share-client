@@ -7,6 +7,7 @@ import ErrorPage from "../pages/ErrorPage";
 import PostArticles from "../components/PostArticles";
 import AllArticle from "../components/AllArticle";
 import ArticleDetailsPage from "../components/ArticleDetailsPage";
+import MyArticles from "../pages/MyArticles";
 
 
 
@@ -42,6 +43,11 @@ import ArticleDetailsPage from "../components/ArticleDetailsPage";
       {
         path:'articleDetails/:id',
         Component: ArticleDetailsPage,
+        loader: () => fetch('http://localhost:4000/articles')
+      },
+      {
+        path: 'myArticles',
+        Component:MyArticles,
         loader: () => fetch('http://localhost:4000/articles')
       }
       

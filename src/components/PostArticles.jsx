@@ -12,7 +12,7 @@ const PostArticles = () => {
         console.log(articles);
 
         //send articles data  to the server
-        fetch('http://localhost:3000/articles', {
+        fetch('http://localhost:4000/articles', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
