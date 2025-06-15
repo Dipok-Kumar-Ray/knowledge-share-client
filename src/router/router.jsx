@@ -8,6 +8,7 @@ import PostArticles from "../components/PostArticles";
 import AllArticle from "../components/AllArticle";
 import ArticleDetailsPage from "../components/ArticleDetailsPage";
 import MyArticles from "../pages/MyArticles";
+import UpdateArticle from "../components/UpdateArticle";
 
 
 
@@ -49,6 +50,11 @@ import MyArticles from "../pages/MyArticles";
         path: 'myArticles',
         Component:MyArticles,
         loader: () => fetch('http://localhost:4000/articles')
+      },
+      {
+        path: 'updateArticle/:id',
+        Component: UpdateArticle,
+        loader: ({params}) => fetch(`http://localhost:4000/articles/${params.id}`)
       }
       
     ]
