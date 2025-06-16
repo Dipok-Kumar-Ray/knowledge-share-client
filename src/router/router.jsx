@@ -4,11 +4,12 @@ import Home from "../pages/Home";
 import Login from "../shared/Login";
 import Register from "../shared/Register";
 import ErrorPage from "../pages/ErrorPage";
-import PostArticles from "../components/PostArticles";
 import AllArticle from "../components/AllArticle";
 import ArticleDetailsPage from "../components/ArticleDetailsPage";
-import MyArticles from "../pages/MyArticles";
 import UpdateArticle from "../components/UpdateArticle";
+import PrivateRoute from "../Private/PrivateRoute";
+import PostArticles from "../components/PostArticles";
+import MyArticles from "../pages/MyArticles";
 
 
 
@@ -33,7 +34,7 @@ import UpdateArticle from "../components/UpdateArticle";
       }, 
       {
         path:'postArticles',
-        Component: PostArticles,
+        element: <PrivateRoute><PostArticles></PostArticles></PrivateRoute>
 
       },
       {
@@ -48,8 +49,8 @@ import UpdateArticle from "../components/UpdateArticle";
       },
       {
         path: 'myArticles',
-        Component:MyArticles,
-        loader: () => fetch('http://localhost:4000/articles')
+        loader: () => fetch('http://localhost:4000/articles'),
+        element: <PrivateRoute><MyArticles></MyArticles></PrivateRoute>
       },
       {
         path: 'updateArticle/:id',
