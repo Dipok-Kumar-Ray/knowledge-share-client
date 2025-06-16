@@ -1,9 +1,12 @@
-import Motion from "./Motion";
-import HeroSlider from "./HeroSlider";
-import { useLoaderData } from "react-router";
-import { format } from "date-fns";
+// import Motion from "./Motion";
+// import { useLoaderData } from "react-router";
+// import { format } from "date-fns";
 import TopContributors from "../extraSection/TopContributors";
 import FeaturedMentors from "../extraSection/FeaturedMentors ";
+
+import { format } from "date-fns";
+import { useLoaderData } from "react-router";
+import Motion from "./Motion";
 
 const Home = () => {
   const articles = useLoaderData();
@@ -12,8 +15,6 @@ const Home = () => {
   return (
     <div>
       <Motion />
-      {/* <HeroSlider /> */}
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
         {articles.map((article) => (
           <div
@@ -61,8 +62,6 @@ const Home = () => {
           </div>
         ))}
       </div>
-
-      {/* <TopContributors /> */}
       <TopContributors/>
       <FeaturedMentors/>
     </div>

@@ -33,11 +33,11 @@ const AllArticle = () => {
                             />
                         </figure>
                         <div className="card-body p-4">
-                            <h2 className="card-title text-xl font-bold text-primary-content">{article.title}</h2>
-                            <p className="text-sm text-gray-600">
-                                <span className="font-semibold text-primary">{article.authorName || "Unknown Author"}</span> • 
-                                <span className="text-gray-500"> {new Date(article.date).toLocaleDateString()}</span>
-                            </p>
+                            <h2 className="card-title text-xl font-bold text-blue-300 ">{article.title}</h2>
+                            <div className="flex justify-between text-xl text-gray-600">
+                               <span className='text-md lg:text-sm font-semibold'> Author Name </span>:  <span className=" text-lg text-blue-600">{article.authorName || "Unknown Author"}</span>  
+                               <span className='text-lg'>Published date</span> :  <span className="lg:text-sm text-blue-600"> {new Date(article.date).toLocaleDateString()}</span>
+                            </div>
                             <p className="text-sm text-gray-700 line-clamp-3">{article.content.slice(0, 100)}...</p>
                             <div className="card-actions justify-end pt-2">
                                 <button onClick={()=> handleReadMore(article._id)}

@@ -12,7 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
   const from = location.state || '/';
 
-  console.log('Loacation in LogIn Page', location);
+  console.log('Loacation in Login Page', location);
   
       const handleLogin = e => {
           e.preventDefault();

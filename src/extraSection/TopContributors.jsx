@@ -11,9 +11,9 @@ const TopContributors = () => {
   ];
 
     return (
-        <section className="my-12">
+        <section className="grid my-12">
       <h2 className="text-2xl font-bold text-center mb-6 text-primary">Top Contributors</h2>
-      <div className="flex flex-wrap justify-center gap-6">
+      <div className="flex flex-wrap justify-center gap-10">
         {contributors.map((person) => (
           <div key={person.id} className="card w-64 bg-base-100 shadow-md hover:shadow-lg transition rounded-xl">
             <figure className="pt-4">

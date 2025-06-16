@@ -45,9 +45,9 @@ const FeaturedMentors  = () => {
               className="w-24 h-24 rounded-full object-cover mb-4 md:mb-0 md:mr-6 border-4 border-primary"
             />
             <div>
-              <h3 className="font-semibold text-lg text-primary">{mentor.name}</h3>
-              <p className="text-sm text-gray-500 mb-1">{mentor.expertise}</p>
-              <p className="text-sm text-gray-600">{mentor.description}</p>
+              <h3 className="text-center font-semibold text-lg text-primary">{mentor.name}</h3>
+              <p className="text-center text-sm text-gray-500 mb-1">{mentor.expertise}</p>
+              <p className="text-center py-7 text-sm text-gray-600 ">{mentor.description}</p>
             </div>
           </div>
         ))}

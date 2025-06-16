@@ -57,7 +57,7 @@ const Navbar = () => {
         <NavLink to="/postArticles">Post Articles</NavLink>
       </li>
       <li>
-        <NavLink to="/">About Us</NavLink>
+        <NavLink to="/aboutUs">About Us</NavLink>
       </li>
       </>
   );
@@ -83,7 +83,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="navbar-center hidden lg:flex">
+      <div className=" navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 space-x-2">
           {links}
           <button onClick={toggleTheme}

@@ -10,6 +10,7 @@ import UpdateArticle from "../components/UpdateArticle";
 import PrivateRoute from "../Private/PrivateRoute";
 import PostArticles from "../components/PostArticles";
 import MyArticles from "../pages/MyArticles";
+import AboutUs from "../pages/AboutUs";
 
 
 
@@ -56,6 +57,10 @@ import MyArticles from "../pages/MyArticles";
         path: 'updateArticle/:id',
         Component: UpdateArticle,
         loader: ({params}) => fetch(`http://localhost:4000/articles/${params.id}`)
+      },
+      {
+        path: 'aboutUs',
+        Component: AboutUs,
       }
       
     ]

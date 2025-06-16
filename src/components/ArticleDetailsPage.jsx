@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { useContext, useEffect, useState } from "react";
 import { useLoaderData, useParams } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";
+import { SlLike } from "react-icons/sl";
 
 const ArticleDetailsPage = () => {
     
@@ -47,27 +48,32 @@ const ArticleDetailsPage = () => {
           key={article._id}
           className="max-w-2xl mx-auto rounded-2xl shadow-lg p-6"
         >
-          <h1 className="text-3xl font-bold text-center mb-4">
-            {article.title}
-          </h1>
-
-          <div className="flex justify-center mb-4">
+          <div className="h-62 flex justify-center mb-4">
             <img
               src={
-                article.photoUrl ||
-                "https://via.placeholder.com/800x400?text=No+Image"
+                article.photoUrl 
+                // "https://via.placeholder.com/800x400?text=No+Image"
               }
               alt={article.title}
               className="w-full rounded-xl shadow"
             />
           </div>
+         <span>
+       
+           <h1 className="text-3xl font-bold text-center mb-4">
+            {article.title}
+          </h1>
+         </span>
 
-          <p className="text-sm mb-2 text-center">
-            <span className="font-semibold text-primary">
+              
+          <p className="flex justify-around text-sm mb-2 text-center"><span className="text-xl font-semibold"> Author Name :</span>  
+            <span className="font-semibold text-xl text-blue-300">
               {article.authorName || "Unknown Author"}
             </span>{" "}
-            •
-            <span className="ml-1">
+            <span className="text-error text-4xl mx-2">*</span>
+            <span className="text-xl font-semibold"> Published Date : </span>
+            <span className="ml-1 text-blue-500 text-xl">
+              
               {article.date
                 ? format(new Date(article.date), "PPP")
                 : "Date Unknown"}
@@ -77,14 +83,14 @@ const ArticleDetailsPage = () => {
           <p className="text-lg whitespace-pre-line">{article.content}</p>
 
           <div className="flex justify-between mt-4">
-            <div>
+            <div className="flex justify-between">
               <button
-                className="cursor-pointer"
+                className="cursor-pointer "
                 onClick={() => handleLike(article._id)}
               >
-                Like
+             
               </button>
-              <span className="ml-2 ">{article.likes} Likes</span>
+              <span className="ml-2 ">{article.likes} <SlLike  size={30}/></span>
             </div>
             <div>
               <form
