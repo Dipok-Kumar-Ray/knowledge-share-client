@@ -1,13 +1,35 @@
 import { Link, useLoaderData, useNavigate } from "react-router";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { getIdToken } from "firebase/auth";
+import axios from "axios";
 
 const AllArticle = () => {
-  const articles = useLoaderData();
-  console.log(articles);
-
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
+    const {user}  = useContext(AuthContext)
+    const [articles, setArticles] =useState([])
+useEffect(()=>{
+  const fetchData = async() => {
+    const token = await getIdToken(user)
+    try{
+      const res = await axios.get(`https://eduhive-server-side.vercel.app/articles`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if(res){
+        setArticles(res.data)
+        console.log("Varified successfull");
+      }
+      else{
+        console.log("Verifed failed");
+      }
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+  fetchData()
+ },[user])
 
   const handleReadMore = (id) => {
     if (user && user.email) {
