@@ -78,7 +78,7 @@ const Motion = () => {
               ))}
 
               {/* Content */}
-              <motion.div
+              <div
                 className="relative z-20 text-center max-w-3xl px-4"
                 initial={{ opacity: 0, y: 60 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -96,7 +96,7 @@ const Motion = () => {
                 >
                   {slide.button}
                 </Link>
-              </motion.div>
+              </div>
             </div>
           </div>
         ))}

@@ -6,11 +6,8 @@ import { AuthContext } from "../contexts/AuthContext";
 import { SlLike } from "react-icons/sl";
 
 const ArticleDetailsPage = () => {
-    
-  //comments
-  const [commentText, setCommentText] = useState("");
-  const [comments, setComments] = useState([]);
 
+  const [viewComments, setViewComments] = useState([])
 
   //likes
   const [cardData, setCardData] = useState([]);
@@ -34,11 +31,31 @@ const ArticleDetailsPage = () => {
       });
   };
 
-  const handleCommentSubmit = (e) => {
+
+
+  //comments
+
+fetch('http://localhost:4000/articles')
+  .then(res => res.json())
+  .then(allArticles => {
+    const matchedArticle = allArticles.find(article => article._id === id);
+    const commentTexts = matchedArticle?.comments?.map(c => c.text) || [];
+    setViewComments(commentTexts);
+  });
+
+  const handleCommentSubmit = (e, id) => {
     e.preventDefault();
     const form = e.target;
     const comment = form.comment.value;
-    console.log(comment);
+    axios.patch(`http://localhost:4000/comments/${id}` , {
+      comment : comment
+    })
+    .then(res => {
+      console.log(res.data);
+    })
+
+
+    // console.log(comment);
   };
 
   return (
@@ -52,7 +69,7 @@ const ArticleDetailsPage = () => {
             <img
               src={
                 article.photoUrl 
-                // "https://via.placeholder.com/800x400?text=No+Image"
+               
               }
               alt={article.title}
               className="w-full rounded-xl shadow"
@@ -93,14 +110,23 @@ const ArticleDetailsPage = () => {
               <span className="ml-2 ">{article.likes} <SlLike  size={30}/></span>
               </button>
             </div>
+
+                <div>
+                  {
+                    viewComments.map(comment => {
+                      return <span>{comment}</span>
+                    })
+                  }
+                </div>
+
             <div>
               <form
-                onSubmit={handleCommentSubmit}
+                onSubmit={(e)=> handleCommentSubmit( e, article._id)}
                 className="flex flex-col gap-2"
               >
                 <input type="text"
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
+                name="comment"
+                 
                   placeholder="Write your comment..."
                   className=" rounded p-2"
                   required
@@ -112,6 +138,8 @@ const ArticleDetailsPage = () => {
                   Submit Comment
                 </button>
               </form>
+
+
             </div>
           </div>
         </div>

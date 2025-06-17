@@ -54,7 +54,7 @@ const AllArticle = () => {
                 </span>
               </div>
               <p className="text-sm text-gray-700 line-clamp-3">
-                {article.content.slice(0, 100)}...
+                {article.content}...
               </p>
               <div className="card-actions justify-end pt-2">
                 <button

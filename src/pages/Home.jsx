@@ -7,8 +7,8 @@ const Home = () => {
 
   return (
     <div>
-      <Motion />
-      <SectionData/>
+      {/* <Motion />
+      <SectionData/> */}
   
       <TopContributors/>
       <FeaturedMentors/>
