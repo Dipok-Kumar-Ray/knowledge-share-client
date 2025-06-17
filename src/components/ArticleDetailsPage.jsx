@@ -124,21 +124,20 @@ fetch('http://localhost:4000/articles')
                 onSubmit={(e)=> handleCommentSubmit( e, article._id)}
                 className="flex flex-col gap-2"
               >
-                <input type="text"
-                name="comment"
+                <input type="  text "
+                name=" comment"
                  
                   placeholder="Write your comment..."
                   className=" rounded p-2"
                   required
                 ></input>
                 <button
-                  type="submit"
+                  type=" submit"
                   className="bg-blue-500 text-white rounded p-2"
                 >
                   Submit Comment
                 </button>
               </form>
-
 
             </div>
           </div>
