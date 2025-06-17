@@ -1,11 +1,43 @@
-import { Link, useLoaderData } from 'react-router';
+import { getIdToken } from 'firebase/auth';
+import { useContext, useEffect, useState } from 'react';
+import { Link} from 'react-router';
 import Swal from 'sweetalert2';
+import { AuthContext } from '../contexts/AuthContext';
+import axios from 'axios';
 
 const MyArticles = () => {
-  const articles = useLoaderData();
+  const [articles, setArticles] = useState([]);
+  console.log(articles);
+  const {user} = useContext(AuthContext)
+ useEffect(()=>{
+  const fetchData = async() => {
+    const token = await getIdToken(user)
+    try{
+      const res = await axios.get(`http://localhost:4000/articles`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if(res){
+        setArticles(res.data)
+        console.log("Varified successfull");
+      }
+      else{
+        console.log("Verifed failed");
+      }
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+  fetchData()
+ },[user])
+
+  
 
   // handleDelete
   const handleDelete = (_id) => {
+
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
@@ -28,6 +60,7 @@ const MyArticles = () => {
         if (result.isConfirmed) {
           fetch(`http://localhost:4000/articles/${_id}`, {
             method: 'DELETE',
+            
           })
             .then((res) => res.json())
             .then((data) => {

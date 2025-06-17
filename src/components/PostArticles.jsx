@@ -1,9 +1,15 @@
+import { getIdToken } from "firebase/auth";
+import { useContext } from "react";
 import Swal from "sweetalert2";
+import { AuthContext } from "../contexts/AuthContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 
 const PostArticles = () => {
+  const {user} = useContext(AuthContext)
 
-    const handleAddArticle = e => {
+    const handleAddArticle =  async(e) => {
         e.preventDefault();
 
         const form = e.target;
@@ -12,27 +18,24 @@ const PostArticles = () => {
         console.log(articles);
 
         //send articles data  to the server
-        fetch('http://localhost:4000/articles', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(articles),
-        }) 
-        .then(res => res.json())
-        .then(data => {
-            if(data.insertedId){
-                console.log('Added new article successfully', data);
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Your article has been added successfully.',
-                    icon: 'success',
-                    // confirmButtonText: 'Cool',
-                    draggable:true
-                })
-                form.reset();
-            }
+      try{
+        const token = await getIdToken(user)
+        const res =  await axios.post(`http://localhost:4000/articles`, articles, {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
         })
+        if(res){
+          toast.success("successfully")
+          console.log('verifid successfull');
+        }
+        else{
+          console.log('verified failed');
+        }
+      }
+      catch(err){
+        console.log(err);
+      }
     }
 
 

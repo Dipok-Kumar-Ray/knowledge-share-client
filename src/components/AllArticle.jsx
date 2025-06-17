@@ -4,7 +4,7 @@ import { AuthContext } from "../contexts/AuthContext";
 
 const AllArticle = () => {
   const articles = useLoaderData();
-  // console.log(articles);
+  console.log(articles);
 
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ const AllArticle = () => {
                 </span>
               </div>
               <p className="text-sm text-gray-700 line-clamp-3">
-                {article.content}...
+                {article.content.slice(0, 100)}...
               </p>
               <div className="card-actions justify-end pt-2">
                 <button

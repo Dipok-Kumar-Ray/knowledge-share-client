@@ -7,9 +7,7 @@ const Home = () => {
 
   return (
     <div>
-      {/* <Motion />
-      <SectionData/> */}
-  
+      <Motion />
       <TopContributors/>
       <FeaturedMentors/>
     </div>

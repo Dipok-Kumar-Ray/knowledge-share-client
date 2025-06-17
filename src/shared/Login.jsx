@@ -19,8 +19,26 @@ const Login = () => {
           const form = e.target;
           const email = form.email.value;
           const password = form.password.value;
-          console.log(email, password);
-  
+          // console.log(email, password);
+        
+
+          // jwt start
+          fetch("http://localhost:4000/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      localStorage.setItem("token", data.token);
+      navigate(from);
+      toast.success("User Logged In Successfully!");
+    })
+    .catch((error) => {
+      console.log(error.message);
+    });
+
+    //jwt end
   
           //create user
           userLogin(email, password)
