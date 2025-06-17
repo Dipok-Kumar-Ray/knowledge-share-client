@@ -23,7 +23,7 @@ const Login = () => {
         
 
           // jwt start
-          fetch("http://localhost:4000/login", {
+          fetch("https://eduhive-server-side.vercel.app/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),

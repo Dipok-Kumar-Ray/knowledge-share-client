@@ -23,7 +23,7 @@ import AboutUs from "../pages/AboutUs";
       {
         index: true,
         Component: Home,
-        loader:() =>  fetch('http://localhost:4000/articles')
+        loader:() =>  fetch('https://eduhive-server-side.vercel.app/articles')
       },
       {
         path: 'login',
@@ -41,22 +41,22 @@ import AboutUs from "../pages/AboutUs";
       {
         path: 'allArticle',
         Component: AllArticle,
-        loader:() => fetch('http://localhost:4000/articles'),
+        loader:() => fetch('https://eduhive-server-side.vercel.app/articles'),
       },
       {
         path:'articleDetails/:id',
         Component: ArticleDetailsPage,
-        loader: () => fetch('http://localhost:4000/articles')
+        loader: () => fetch('https://eduhive-server-side.vercel.app/articles')
       },
       {
         path: 'myArticles',
-        loader: () => fetch('http://localhost:4000/articles'),
+        loader: () => fetch('https://eduhive-server-side.vercel.app/articles'),
         element: <PrivateRoute><MyArticles></MyArticles></PrivateRoute>
       },
       {
         path: 'updateArticle/:id',
         Component: UpdateArticle,
-        loader: ({params}) => fetch(`http://localhost:4000/articles/${params.id}`)
+        loader: ({params}) => fetch(`https://eduhive-server-side.vercel.app/articles/${params.id}`)
       },
       {
         path: 'aboutUs',

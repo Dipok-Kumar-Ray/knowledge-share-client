@@ -13,7 +13,7 @@ const MyArticles = () => {
   const fetchData = async() => {
     const token = await getIdToken(user)
     try{
-      const res = await axios.get(`http://localhost:4000/articles`, {
+      const res = await axios.get(`https://eduhive-server-side.vercel.app/articles`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -58,7 +58,7 @@ const MyArticles = () => {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          fetch(`http://localhost:4000/articles/${_id}`, {
+          fetch(`https://eduhive-server-side.vercel.app/articles/${_id}`, {
             method: 'DELETE',
             
           })

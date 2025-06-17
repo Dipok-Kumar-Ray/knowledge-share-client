@@ -20,7 +20,7 @@ const PostArticles = () => {
         //send articles data  to the server
       try{
         const token = await getIdToken(user)
-        const res =  await axios.post(`http://localhost:4000/articles`, articles, {
+        const res =  await axios.post(`https://eduhive-server-side.vercel.app/articles`, articles, {
           headers:{
             Authorization: `Bearer ${token}`
           }

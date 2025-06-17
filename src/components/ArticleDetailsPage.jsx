@@ -23,7 +23,7 @@ const ArticleDetailsPage = () => {
   const handleLike = (id) => {
     // console.log(id);
     axios
-      .patch(`http://localhost:4000/userLike/${id}`, {
+      .patch(`https://eduhive-server-side.vercel.app/userLike/${id}`, {
         userEmail: user?.email,
       })
       .then((res) => {
@@ -35,7 +35,7 @@ const ArticleDetailsPage = () => {
 
   //comments
 
-fetch('http://localhost:4000/articles')
+fetch('https://eduhive-server-side.vercel.app/articles')
   .then(res => res.json())
   .then(allArticles => {
     const matchedArticle = allArticles.find(article => article._id === id);
@@ -47,7 +47,7 @@ fetch('http://localhost:4000/articles')
     e.preventDefault();
     const form = e.target;
     const comment = form.comment.value;
-    axios.patch(`http://localhost:4000/comments/${id}` , {
+    axios.patch(`https://eduhive-server-side.vercel.app/comments/${id}` , {
       comment : comment
     })
     .then(res => {
