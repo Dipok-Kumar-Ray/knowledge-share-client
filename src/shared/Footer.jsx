@@ -13,7 +13,7 @@ const Footer = () => {
           <span className="text-3xl text-blue-400 font-bold">Edu</span>
           <span className="text-3xl text-green-400 font-bold">Hive</span>
         </div>
-          <p className="text-sm">
+          <p className="text-md">
             Empowering learners with knowledge and skills to succeed in a digital world.
           </p>
         </div>

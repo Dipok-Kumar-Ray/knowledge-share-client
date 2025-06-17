@@ -48,7 +48,7 @@ const ArticleDetailsPage = () => {
           key={article._id}
           className="max-w-2xl mx-auto rounded-2xl shadow-lg p-6"
         >
-          <div className="h-62 flex justify-center mb-4">
+          <div className="h-82 flex justify-center mb-4">
             <img
               src={
                 article.photoUrl 
@@ -81,6 +81,7 @@ const ArticleDetailsPage = () => {
           </p>
 
           <p className="text-lg whitespace-pre-line">{article.content}</p>
+          <p className="text-lg font-bold">{article.tags}</p>
 
           <div className="flex justify-between mt-4">
             <div className="flex justify-between">
@@ -89,8 +90,8 @@ const ArticleDetailsPage = () => {
                 onClick={() => handleLike(article._id)}
               >
              
-              </button>
               <span className="ml-2 ">{article.likes} <SlLike  size={30}/></span>
+              </button>
             </div>
             <div>
               <form

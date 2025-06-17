@@ -2,12 +2,13 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { updateProfile } from "firebase/auth";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const {createUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -31,6 +32,7 @@ const Register = () => {
       displayName: name,
       photoURL: photo,
     }).then(() => {
+      navigate('/')
       toast.success("User Updated Profile Successfully!");
     });
   })
