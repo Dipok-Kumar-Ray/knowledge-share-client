@@ -1,47 +1,58 @@
 import { getIdToken } from "firebase/auth";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Swal from "sweetalert2";
 import { AuthContext } from "../contexts/AuthContext";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import { useNavigate } from "react-router";
 
 const PostArticles = () => {
-  const {user} = useContext(AuthContext)
+  const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate()
 
-    const handleAddArticle =  async(e) => {
-        e.preventDefault();
+  setTimeout(() => {
+    setLoading(false);
+  }, 300);
 
-        const form = e.target;
-        const formData = new FormData(form);
-        const articles = Object.fromEntries(formData.entries());
-        console.log(articles);
+  if (loading) {
+    return <span className="loading loading-bars loading-xl"></span>;
+  }
 
-        //send articles data  to the server
-      try{
-        const token = await getIdToken(user)
-        const res =  await axios.post(`https://eduhive-server-side.vercel.app/articles`, articles, {
-          headers:{
-            Authorization: `Bearer ${token}`
-          }
-        })
-        if(res){
-          toast.success("successfully")
-          console.log('verifid successfull');
-        }
-        else{
-          console.log('verified failed');
-        }
+  const handleAddArticle = async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const articles = Object.fromEntries(formData.entries());
+    console.log(articles);
+
+    //send articles data  to the server
+    try {
+      const token = await getIdToken(user);
+      const res = await axios.post(`https://eduhive-server-side.vercel.app/articles`, articles, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res) {
+        toast.success("successfully");
+        console.log("verifid successfull");
+        navigate('/myArticles')
+      } else {
+        console.log("verified failed");
       }
-      catch(err){
-        console.log(err);
-      }
+    } catch (err) {
+      console.log(err);
     }
-
+  };
 
   return (
     <div className="flex justify-center items-center py-8">
-      <form onSubmit={handleAddArticle}  className="w-full max-w-2xl p-8 bg-base-100 rounded-lg shadow-2xl space-y-6">
+      <form
+        onSubmit={handleAddArticle}
+        className="w-full max-w-2xl p-8 bg-base-100 rounded-lg shadow-2xl space-y-6"
+      >
         <h2 className="text-3xl font-extrabold text-center text-primary mb-6">
           Craft Your New Article
         </h2>
@@ -49,14 +60,16 @@ const PostArticles = () => {
         {/* Article Title Input Field */}
         <div className="form-control">
           <label htmlFor="articleTitle" className="label">
-            <span className="label-text text-lg font-semibold">Article Title <span className="text-error">*</span></span>
+            <span className="label-text text-lg font-semibold">
+              Article Title <span className="text-error">*</span>
+            </span>
           </label>
           <input
             type="text"
             name="title"
             placeholder="e.g., The Impact of AI on Modern Lifestyles"
             className="input input-bordered input-primary w-full text-base"
-            required 
+            required
             aria-label="Article Title"
           />
         </div>
@@ -64,13 +77,15 @@ const PostArticles = () => {
         {/* Content Textarea Field */}
         <div className="form-control">
           <label htmlFor="articleContent" className="label">
-            <span className="label-text text-lg font-semibold">Content <span className="text-error">*</span></span>
+            <span className="label-text text-lg font-semibold">
+              Content <span className="text-error">*</span>
+            </span>
           </label>
           <textarea
             name="content"
             placeholder="Write the full, engaging content of your article. Be thorough and provide value!"
             className="textarea textarea-bordered textarea-primary h-48 w-full text-base resize-y"
-            required 
+            required
             aria-label="Article Content"
           ></textarea>
         </div>
@@ -78,15 +93,19 @@ const PostArticles = () => {
         {/* Category Dropdown Field */}
         <div className="form-control">
           <label htmlFor="articleCategory" className="label">
-            <span className="label-text text-lg font-semibold">Category <span className="text-error">*</span></span>
+            <span className="label-text text-lg font-semibold">
+              Category <span className="text-error">*</span>
+            </span>
           </label>
           <select
             name="category"
             className="select select-bordered select-primary w-full text-base"
-            required 
+            required
             aria-label="Article Category"
           >
-            <option value="" disabled>Select a category</option>
+            <option value="" disabled>
+              Select a category
+            </option>
             <option value="Technology">Technology</option>
             <option value="Science">Science</option>
             <option value="Health & Wellness">Health & Wellness</option>
@@ -101,7 +120,9 @@ const PostArticles = () => {
         {/* Tags Input Field (Optional) */}
         <div className="form-control">
           <label htmlFor="articleTags" className="label">
-            <span className="label-text text-lg font-semibold">Tags (Optional)</span>
+            <span className="label-text text-lg font-semibold">
+              Tags (Optional)
+            </span>
           </label>
           <input
             type="text"
@@ -112,25 +133,48 @@ const PostArticles = () => {
           />
         </div>
 
-         {/* Author Name Input Field */}
+        {/* Author Name Input Field */}
         <div>
-            <label htmlFor="authorName" className="label">
-            <span className="label-text text-lg font-semibold">Author Name <span className="text-error">*</span></span>
-            </label>
-            <input
+          <label htmlFor="authorName" className="label">
+            <span className="label-text text-lg font-semibold">
+              Author Name <span className="text-error">*</span>
+            </span>
+          </label>
+          <input
             type="text"
+            value={user?.displayName}
             name="authorName"
             placeholder="Author Name"
             className="input input-bordered input-primary w-full text-base"
             required
             aria-label="Author Name"
-            />
+          />
+        </div>
+
+        {/* Author Email Input Field */}
+        <div>
+          <label htmlFor="authorName" className="label">
+            <span className="label-text text-lg font-semibold">
+              Author Email <span className="text-error">*</span>
+            </span>
+          </label>
+          <input
+            type="email"
+            value={user?.email}
+            name="authorEmail"
+            placeholder="Author Email"
+            className="input input-bordered input-primary w-full text-base"
+            required
+            aria-label="Author Email"
+          />
         </div>
 
         {/* Thumbnail Image URL Input Field (Optional) */}
         <div className="form-control">
           <label htmlFor="thumbnailUrl" className="label">
-            <span className="label-text text-lg font-semibold">Thumbnail Image URL (Optional)</span>
+            <span className="label-text text-lg font-semibold">
+              Thumbnail Image URL (Optional)
+            </span>
           </label>
           <input
             type="url"
@@ -144,20 +188,25 @@ const PostArticles = () => {
         {/* Publication Date Input Field */}
         <div className="form-control">
           <label htmlFor="publicationDate" className="label">
-            <span className="label-text text-lg font-semibold">Publication Date <span className="text-error">*</span></span>
+            <span className="label-text text-lg font-semibold">
+              Publication Date <span className="text-error">*</span>
+            </span>
           </label>
           <input
-            type="date" 
+            type="date"
             name="date"
             className="input input-bordered input-primary w-full text-base"
-            required 
+            required
             aria-label="Publication Date"
           />
         </div>
 
         {/* Submit Button */}
         <div className="form-control mt-8">
-          <button type="submit" className="btn btn-primary btn-lg w-full text-white font-bold">
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg w-full text-white font-bold"
+          >
             Add Post Article
           </button>
         </div>

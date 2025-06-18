@@ -23,7 +23,8 @@ import AboutUs from "../pages/AboutUs";
       {
         index: true,
         Component: Home,
-        loader:() =>  fetch('https://eduhive-server-side.vercel.app/articles')
+        loader:() =>  fetch('https://eduhive-server-side.vercel.app/articles'),
+        hydrateFallbackElement: <span className="loading loading-bars loading-xl"></span>
       },
       {
         path: 'login',
@@ -41,22 +42,23 @@ import AboutUs from "../pages/AboutUs";
       {
         path: 'allArticle',
         Component: AllArticle,
-        loader:() => fetch('https://eduhive-server-side.vercel.app/articles'),
+
       },
       {
         path:'articleDetails/:id',
-        Component: ArticleDetailsPage,
-        loader: () => fetch('https://eduhive-server-side.vercel.app/articles')
+        Component: ArticleDetailsPage
       },
       {
         path: 'myArticles',
         loader: () => fetch('https://eduhive-server-side.vercel.app/articles'),
+        hydrateFallbackElement: <span className="loading loading-bars loading-xl"></span>,
         element: <PrivateRoute><MyArticles></MyArticles></PrivateRoute>
       },
       {
         path: 'updateArticle/:id',
         Component: UpdateArticle,
-        loader: ({params}) => fetch(`https://eduhive-server-side.vercel.app/articles/${params.id}`)
+        loader: ({params}) => fetch(`https://eduhive-server-side.vercel.app/articles/${params.id}`),
+        hydrateFallbackElement: <span className="loading loading-bars loading-xl"></span>
       },
       {
         path: 'aboutUs',

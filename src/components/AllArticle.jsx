@@ -1,41 +1,47 @@
-import { Link, useLoaderData, useNavigate } from "react-router";
+// import { Link, useLoaderData, useNavigate } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { getIdToken } from "firebase/auth";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 const AllArticle = () => {
-    const {user}  = useContext(AuthContext)
-    const [articles, setArticles] =useState([])
-useEffect(()=>{
-  const fetchData = async() => {
-    const token = await getIdToken(user)
-    try{
-      const res = await axios.get(`https://eduhive-server-side.vercel.app/articles`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+  const { user } = useContext(AuthContext);
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = user?.accessToken;
+      console.log(token);
+      try {
+        const res = await axios.get(`https://eduhive-server-side.vercel.app/articles`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res) {
+          setArticles(res.data);
+          setLoading(false);
+          console.log("Varified successfull");
+        } else {
+          console.log("Verifed failed");
         }
-      })
-      if(res){
-        setArticles(res.data)
-        console.log("Varified successfull");
+      } catch (err) {
+        console.log(err);
       }
-      else{
-        console.log("Verifed failed");
-      }
-    }
-    catch(err){
-      console.log(err);
-    }
+    };
+    fetchData();
+  }, [user]);
+
+  if (loading) {
+    return <span className="loading loading-bars loading-xl"></span>;
   }
-  fetchData()
- },[user])
 
   const handleReadMore = (id) => {
     if (user && user.email) {
       navigate(`/articleDetails/${id}`);
     } else {
-      navigate(`'login?redirect=/articleDetails`);
+      navigate('/login');
     }
   };
 

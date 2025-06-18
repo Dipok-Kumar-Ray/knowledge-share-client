@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import profileImg from "../assets/avator.png.webp"
+import profileImg from "../assets/avator.png.webp";
 import { Link, NavLink } from "react-router";
-import './navbar.css';
-
+import "./navbar.css";
 
 const Navbar = () => {
   const { user, signout } = useContext(AuthContext);
@@ -29,7 +28,7 @@ const Navbar = () => {
       });
   };
 
-    const links = (
+  const links = (
     <>
       <li>
         <NavLink to="/">Home</NavLink>
@@ -46,7 +45,7 @@ const Navbar = () => {
       <li>
         <NavLink to="/aboutUs">About Us</NavLink>
       </li>
-      </>
+    </>
   );
 
   return (
@@ -54,13 +53,25 @@ const Navbar = () => {
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round"
-                strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              />
             </svg>
           </div>
-          <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow">
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
+          >
             {links}
           </ul>
         </div>
@@ -73,9 +84,11 @@ const Navbar = () => {
       <div className=" navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 space-x-2">
           {links}
-          <button onClick={toggleTheme}
+          <button
+            onClick={toggleTheme}
             className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}>
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
             {theme === "dark" ? "🌞" : "🌙"}
           </button>
         </ul>
@@ -89,10 +102,12 @@ const Navbar = () => {
                 <img src={user.photoURL || profileImg} alt="User Profile" />
               </div>
             </label>
-            <ul tabIndex={0}
-              className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+            <ul
+              tabIndex={0}
+              className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
+            >
               <li>
-                <NavLink to="/my-articles">My Articles</NavLink>
+                <NavLink to="/myArticles">My Articles</NavLink>
               </li>
               <li>
                 <NavLink to="/postArticles">Post Article</NavLink>
@@ -104,8 +119,12 @@ const Navbar = () => {
           </div>
         ) : (
           <>
-            <Link to="/register" className="btn btn-outline btn-sm">Register</Link>
-            <Link to="/login" className="btn btn-primary btn-sm">Login</Link>
+            <Link to="/register" className="btn btn-outline btn-sm">
+              Register
+            </Link>
+            <Link to="/login" className="btn btn-primary btn-sm">
+              Login
+            </Link>
           </>
         )}
       </div>

@@ -7,9 +7,17 @@ import { updateProfile } from "firebase/auth";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const {createUser } = useContext(AuthContext);
+  const { createUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(true);
+  setTimeout(() => {
+    setLoading(false);
+  }, 300);
+
+  if (loading) {
+    return <span className="loading loading-bars loading-xl"></span>;
+  }
   const handleRegister = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -18,28 +26,26 @@ const Register = () => {
     const email = form.email.value;
     const password = form.password.value;
     console.log(name, photo, email, password);
-    
+
     // const formData = new FormData(form);
     // const data = Object.fromEntries(formData.entries());
     // console.log(data);
 
-
     //update user profile
     createUser(email, password)
-  .then((result) => {
-    console.log(result.user);
-    updateProfile(result.user, {
-      displayName: name,
-      photoURL: photo,
-    }).then(() => {
-      navigate('/')
-      toast.success("User Updated Profile Successfully!");
-    });
-  })
-  .catch((error) => {
-    console.log(error.message);
-  });
-
+      .then((result) => {
+        console.log(result.user);
+        updateProfile(result.user, {
+          displayName: name,
+          photoURL: photo,
+        }).then(() => {
+          navigate("/");
+          toast.success("User Updated Profile Successfully!");
+        });
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
 
     //create user
     createUser(email, password)

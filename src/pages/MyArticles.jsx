@@ -1,43 +1,47 @@
-import { getIdToken } from 'firebase/auth';
-import { useContext, useEffect, useState } from 'react';
-import { Link} from 'react-router';
-import Swal from 'sweetalert2';
-import { AuthContext } from '../contexts/AuthContext';
-import axios from 'axios';
+import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router";
+import Swal from "sweetalert2";
+import { AuthContext } from "../contexts/AuthContext";
+import axios from "axios";
 
 const MyArticles = () => {
   const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
   console.log(articles);
-  const {user} = useContext(AuthContext)
- useEffect(()=>{
-  const fetchData = async() => {
-    const token = await getIdToken(user)
-    try{
-      const res = await axios.get(`https://eduhive-server-side.vercel.app/articles`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+  const { user } = useContext(AuthContext);
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = user?.accessToken;
+      try {
+        const res = await axios.get(
+          `https://eduhive-server-side.vercel.app/myArticles?email=${user?.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (res) {
+          setArticles(res.data);
+          setLoading(false);
+        } else {
+          console.log("Verifed failed");
         }
-      })
-      if(res){
-        setArticles(res.data)
-        console.log("Varified successfull");
+      } catch (err) {
+        console.log(err);
       }
-      else{
-        console.log("Verifed failed");
-      }
-    }
-    catch(err){
-      console.log(err);
-    }
-  }
-  fetchData()
- },[user])
+    };
+    fetchData();
+  }, [user]);
 
-  
+  console.log(articles);
+
+  if (loading) {
+    return <span className="loading loading-bars loading-xl"></span>;
+  }
 
   // handleDelete
   const handleDelete = (_id) => {
-
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
@@ -59,18 +63,19 @@ const MyArticles = () => {
       .then((result) => {
         if (result.isConfirmed) {
           fetch(`https://eduhive-server-side.vercel.app/articles/${_id}`, {
-            method: 'DELETE',
-            
+            method: "DELETE",
           })
             .then((res) => res.json())
             .then((data) => {
               if (data.deletedCount > 0) {
                 Swal.fire({
-                  title: 'Deleted!',
-                  text: 'Your article has been deleted.',
-                  icon: 'success',
-                  confirmButtonText: 'Cool',
+                  title: "Deleted!",
+                  text: "Your article has been deleted.",
+                  icon: "success",
+                  confirmButtonText: "Cool",
                 });
+                const newArticals = articles.filter(article=> article._id !== _id)
+                setArticles(newArticals)
               }
             });
         }
@@ -95,10 +100,16 @@ const MyArticles = () => {
           <tbody>
             {articles.map((article) => (
               <tr key={article._id} className="hover:orange-100">
-                <td className="px-3 sm:px-4 py-2 border break-words">{article.title}</td>
-                <td className="px-3 sm:px-4 py-2 border break-words max-w-[150px] sm:max-w-xs truncate">{article.content}</td>
+                <td className="px-3 sm:px-4 py-2 border break-words">
+                  {article.title}
+                </td>
+                <td className="px-3 sm:px-4 py-2 border break-words max-w-[150px] sm:max-w-xs truncate">
+                  {article.content}
+                </td>
                 <td className="px-3 sm:px-4 py-2 border">{article.category}</td>
-                <td className="px-3 sm:px-4 py-2 border">{article.authorName}</td>
+                <td className="px-3 sm:px-4 py-2 border">
+                  {article.authorName}
+                </td>
                 <td className="px-3 sm:px-4 py-2 border">{article.date}</td>
                 <td className="px-3 sm:px-4 py-2 border">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
