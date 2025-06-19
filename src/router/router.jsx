@@ -11,6 +11,7 @@ import PrivateRoute from "../Private/PrivateRoute";
 import PostArticles from "../components/PostArticles";
 import MyArticles from "../pages/MyArticles";
 import AboutUs from "../pages/AboutUs";
+import ContactSection from "../shared/ContactSection";
 
 
 
@@ -63,6 +64,10 @@ import AboutUs from "../pages/AboutUs";
       {
         path: 'aboutUs',
         Component: AboutUs,
+      },
+      {
+        path: 'contact',
+        Component: ContactSection,
       }
       
     ]

@@ -1,33 +1,57 @@
-// import { Link, useRouteError } from 'react-router-dom';
-// import { BookOpen, AlertTriangle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router';
 
-import { AlertTriangle, BookOpen } from "lucide-react";
-import { Link, useRouteError } from "react-router";
-
-export default function ErrorPage() {
-  const error = useRouteError();
-
+const ErrorPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-indigo-50 via-sky-100 to-white flex items-center justify-center px-4">
-      <div className="max-w-lg w-full bg-white p-10 shadow-2xl rounded-2xl text-center">
-        <div className="flex justify-center mb-4 text-indigo-600">
-          <AlertTriangle className="w-14 h-14" />
-        </div>
-        <h1 className="text-4xl font-bold text-indigo-800 mb-2">Page Not Found</h1>
-        <p className="text-gray-600 mb-6">
-          Sorry, we couldn't find the page you're looking for.<br />
-          <span className="text-sm text-gray-500 italic">
-            {error?.statusText || error?.message || 'An unexpected error occurred.'}
-          </span>
-        </p>
+    <section className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-600 to-blue-500 text-white px-5">
+      {/* Animated Image / Icon */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
+        animate={{ opacity: 1, scale: 1, rotate: 0 }}
+        transition={{ duration: 1 }}
+        className="mb-6"
+      >
+        <img 
+          src="https://cdn-icons-png.flaticon.com/512/2748/2748558.png" 
+          alt="Lost in Knowledge"
+          className="w-48 h-48"
+        />
+      </motion.div>
+
+      {/* Heading */}
+      <motion.h1
+        className="text-4xl md:text-6xl font-bold mb-4 text-center"
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+      >
+        Lost in Knowledge?
+      </motion.h1>
+
+      {/* Subtext */}
+      <motion.p
+        className="text-lg md:text-xl mb-8 text-center max-w-xl"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.3 }}
+      >
+        The page you’re looking for doesn’t exist or might have been moved. Let’s guide you back!
+      </motion.p>
+
+      {/* Button */}
+      <motion.div
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+      >
         <Link
           to="/"
-          className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-full transition duration-200"
+          className="bg-white text-blue-600 font-semibold py-3 px-6 rounded-full shadow-lg hover:bg-blue-100 transition"
         >
-          <BookOpen className="w-5 h-5" />
-          Back to Homepage
+          Back to Home
         </Link>
-      </div>
-    </div>
+      </motion.div>
+    </section>
   );
-}
+};
+
+export default ErrorPage;
