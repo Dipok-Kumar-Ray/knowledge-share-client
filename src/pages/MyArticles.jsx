@@ -62,7 +62,7 @@ const MyArticles = () => {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          fetch(`https://eduhive-server-side.vercel.app/articles/${_id}`, {
+          fetch(`https://eduhive-server-side.vercel.app/${_id}`, {
             method: "DELETE",
           })
             .then((res) => res.json())

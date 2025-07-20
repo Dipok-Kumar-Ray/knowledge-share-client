@@ -112,44 +112,8 @@ const PostArticles = () => {
             <option value="Tech">Tech</option>
             <option value="Health">Health</option>
             <option value="Education">Education</option>
-            <option value="Lifestyle">Lifestyle</option>
-            <option value="Business">Business</option>
-            <option value="Science">Science</option>
-            <option value="Travel">Travel</option>
-            <option value="Arts & Culture">Arts & Culture</option>
-          </select>
-        </div>
 
-        {/* Tags Dropdown */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text text-lg font-semibold">
-              Tags (comma separated)
-            </span>
-          </label>
-          <select
-            name="tags"
-            className="select select-bordered select-primary w-full text-base"
-            onChange={(e) => {
-              // set selected tag as input value
-              e.target.form.tags.value = e.target.value;
-            }}
-          >
-            <option value="">Select a tag</option>
-            <option value="React">React</option>
-            <option value="JavaScript">JavaScript</option>
-            <option value="AI">AI</option>
-            <option value="CSS">CSS</option>
-            <option value="MongoDB">MongoDB</option>
           </select>
-
-          {/* Hidden input to hold selected tag(s) */}
-          <input
-            type="text"
-            name="tags"
-            placeholder="e.g., react, ai"
-            className="input input-bordered input-primary w-full text-base mt-2"
-          />
         </div>
 
         {/* Author Name */}
@@ -166,6 +130,7 @@ const PostArticles = () => {
             readOnly
             className="input input-bordered input-primary w-full text-base"
           />
+
         </div>
 
         {/* Author Email */}

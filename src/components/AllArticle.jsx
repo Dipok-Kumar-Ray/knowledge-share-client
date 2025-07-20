@@ -11,6 +11,8 @@ const AllArticle = () => {
   const [tag, setTag] = useState("All");
   const navigate = useNavigate();
 
+  
+
   useEffect(() => {
     fetchArticles(category, tag);
   }, [user]);
@@ -18,7 +20,7 @@ const AllArticle = () => {
   const fetchArticles = async (selectedCategory, selectedTag) => {
     const token = user?.accessToken;
     try {
-      const res = await axios.get(`https://eduhive-server-side.vercel.app/articles`, {
+      const res = await axios.get(`http://localhost:3000/articles`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -32,6 +34,9 @@ const AllArticle = () => {
       console.error("Failed to fetch articles:", err);
     } finally {
       setLoading(false);
+
+
+
     }
   };
 
@@ -69,7 +74,7 @@ const AllArticle = () => {
           <option>Education</option>
         </select>
 
-        <select
+        {/* <select
           className="select select-bordered"
           value={tag}
           onChange={(e) => setTag(e.target.value)}
@@ -78,7 +83,7 @@ const AllArticle = () => {
           <option>React</option>
           <option>JavaScript</option>
           <option>AI</option>
-        </select>
+        </select> */}
 
         <button className="btn btn-primary" onClick={handleFilter}>
           Filter

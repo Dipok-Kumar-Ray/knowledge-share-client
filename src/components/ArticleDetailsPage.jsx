@@ -4,6 +4,8 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";
 import { FaHeart } from "react-icons/fa";
+
+
 import { toast } from "react-toastify";
 
 const ArticleDetailsPage = () => {
@@ -16,10 +18,12 @@ const ArticleDetailsPage = () => {
     setLoading(true);
     try {
       const res = await axios.get(`https://eduhive-server-side.vercel.app/articles/${id}`);
+      
       setArticle(res.data);
     } catch {
       toast.error("Failed to load article");
     }
+
     setLoading(false);
   };
 
@@ -65,38 +69,62 @@ const handleLike = async () => {
 };
 
 
+const handleCommentSubmit = async (e) => {
+  e.preventDefault();
+  const text = e.target.comment.value.trim();
+  if (!text) return;
 
-
-  const handleCommentSubmit = async (e) => {
-    e.preventDefault();
-    const text = e.target.comment.value.trim();
-    if (!text) return;
-
-    const commentObj = {
-      email: user?.email || "Anonymous",
-       displayName: user?.displayName || "Anonymous",
-  text,
-    };
-
-    try {
-      const res = await axios.patch(`https://eduhive-server-side.vercel.app/comments/${id}`, {
-        comment: commentObj,
-      });
-      if (res.data.modifiedCount) {
-        toast.success("Comment added!");
-        fetchArticle();
-        e.target.reset();
-      }
-    } catch {
-      toast.error("Failed to add comment");
-    }
-
-
-
-
-
-
+  const commentObj = {
+    email: user?.email || "Anonymous",
+    displayName: user?.displayName || "Anonymous",
+    text,
   };
+
+  try {
+    const res = await axios.patch(`https://eduhive-server-side.vercel.app/comments/${id}`, {
+      comment: commentObj,
+    });
+    if (res.data.modifiedCount) {
+      toast.success("Comment added!");
+      fetchArticle();
+      e.target.reset();
+    }
+  } catch {
+    toast.error("Failed to add comment");
+  }
+};
+
+
+  // const handleCommentSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const text = e.target.comment.value.trim();
+  //   if (!text) return;
+
+  //   const commentObj = {
+  //     email: user?.email || "Anonymous",
+  //      displayName: user?.displayName || "Anonymous",
+  // text,
+  //   };
+
+  //   try {
+  //     const res = await axios.patch(`https://eduhive-server-side.vercel.app/comments/${id}`, {
+  //       comment: commentObj,
+  //     });
+  //     if (res.data.modifiedCount) {
+  //       toast.success("Comment added!");
+  //       fetchArticle();
+  //       e.target.reset();
+  //     }
+  //   } catch {
+  //     toast.error("Failed to add comment");
+  //   }
+
+
+
+
+
+
+  // };
 
   if (loading || !article) {
     return <span className="loading loading-bars loading-xl"></span>;
