@@ -85,9 +85,9 @@ const MyArticles = () => {
   return (
     <div className="w-11/12 mx-auto my-9 overflow-x-auto">
       <h1 className="text-3xl font-bold text-center mb-6">My Articles</h1>
-      <div className="shadow-md rounded-lg border border-gray-300">
+      <div className="shadow-md rounded-lg border border-gray-800">
         <table className="min-w-full table-auto">
-          <thead className="bg-gray-100">
+          <thead >
             <tr>
               <th className="px-3 sm:px-4 py-2 text-left border">Title</th>
               <th className="px-3 sm:px-4 py-2 text-left border">Content</th>
