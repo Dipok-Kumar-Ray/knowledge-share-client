@@ -1,5 +1,7 @@
 # 📚 eduHive
 
+Live Link : https://eduhive-auth-87275.web.app/
+
 ![MIT License](https://img.shields.io/badge/License-MIT-green.svg)
 ![Build](https://img.shields.io/badge/build-passing-brightgreen)
 ![React](https://img.shields.io/badge/React-18-blue)
