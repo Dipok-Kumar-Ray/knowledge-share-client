@@ -9,7 +9,7 @@ import { useNavigate } from "react-router";
 const PostArticles = () => {
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   setTimeout(() => {
     setLoading(false);
@@ -25,22 +25,28 @@ const PostArticles = () => {
     const form = e.target;
     const formData = new FormData(form);
     const articles = Object.fromEntries(formData.entries());
-    console.log(articles);
 
-    //send articles data  to the server
+    // convert comma separated tag string to array
+    if (articles.tags) {
+      articles.tags = articles.tags.split(",").map((tag) => tag.trim());
+    }
+
     try {
       const token = await getIdToken(user);
-      const res = await axios.post(`https://eduhive-server-side.vercel.app/articles`, articles, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.post(
+        `https://eduhive-server-side.vercel.app/articles`,
+        articles,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (res) {
-        toast.success("successfully");
-        console.log("verifid successfull");
-        navigate('/myArticles')
+        toast.success("Article added successfully!");
+        navigate("/myArticles");
       } else {
-        console.log("verified failed");
+        console.log("verification failed");
       }
     } catch (err) {
       console.log(err);
@@ -57,9 +63,9 @@ const PostArticles = () => {
           Craft Your New Article
         </h2>
 
-        {/* Article Title Input Field */}
+        {/* Title */}
         <div className="form-control">
-          <label htmlFor="articleTitle" className="label">
+          <label className="label">
             <span className="label-text text-lg font-semibold">
               Article Title <span className="text-error">*</span>
             </span>
@@ -70,29 +76,27 @@ const PostArticles = () => {
             placeholder="e.g., The Impact of AI on Modern Lifestyles"
             className="input input-bordered input-primary w-full text-base"
             required
-            aria-label="Article Title"
           />
         </div>
 
-        {/* Content Textarea Field */}
+        {/* Content */}
         <div className="form-control">
-          <label htmlFor="articleContent" className="label">
+          <label className="label">
             <span className="label-text text-lg font-semibold">
               Content <span className="text-error">*</span>
             </span>
           </label>
           <textarea
             name="content"
-            placeholder="Write the full, engaging content of your article. Be thorough and provide value!"
+            placeholder="Write the full, engaging content of your article."
             className="textarea textarea-bordered textarea-primary h-48 w-full text-base resize-y"
             required
-            aria-label="Article Content"
           ></textarea>
         </div>
 
-        {/* Category Dropdown Field */}
+        {/* Category Dropdown */}
         <div className="form-control">
-          <label htmlFor="articleCategory" className="label">
+          <label className="label">
             <span className="label-text text-lg font-semibold">
               Category <span className="text-error">*</span>
             </span>
@@ -101,95 +105,105 @@ const PostArticles = () => {
             name="category"
             className="select select-bordered select-primary w-full text-base"
             required
-            aria-label="Article Category"
           >
             <option value="" disabled>
               Select a category
             </option>
-            <option value="Technology">Technology</option>
-            <option value="Science">Science</option>
-            <option value="Health & Wellness">Health & Wellness</option>
-            <option value="Lifestyle">Lifestyle</option>
-            <option value="Travel">Travel</option>
+            <option value="Tech">Tech</option>
+            <option value="Health">Health</option>
             <option value="Education">Education</option>
+            <option value="Lifestyle">Lifestyle</option>
             <option value="Business">Business</option>
+            <option value="Science">Science</option>
+            <option value="Travel">Travel</option>
             <option value="Arts & Culture">Arts & Culture</option>
           </select>
         </div>
 
-        {/* Tags Input Field (Optional) */}
+        {/* Tags Dropdown */}
         <div className="form-control">
-          <label htmlFor="articleTags" className="label">
+          <label className="label">
             <span className="label-text text-lg font-semibold">
-              Tags (Optional)
+              Tags (comma separated)
             </span>
           </label>
+          <select
+            name="tags"
+            className="select select-bordered select-primary w-full text-base"
+            onChange={(e) => {
+              // set selected tag as input value
+              e.target.form.tags.value = e.target.value;
+            }}
+          >
+            <option value="">Select a tag</option>
+            <option value="React">React</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="AI">AI</option>
+            <option value="CSS">CSS</option>
+            <option value="MongoDB">MongoDB</option>
+          </select>
+
+          {/* Hidden input to hold selected tag(s) */}
           <input
             type="text"
             name="tags"
-            placeholder="e.g., react, javascript, frontend, webdev, programming"
-            className="input input-bordered input-primary w-full text-base"
-            aria-label="Article Tags"
+            placeholder="e.g., react, ai"
+            className="input input-bordered input-primary w-full text-base mt-2"
           />
         </div>
 
-        {/* Author Name Input Field */}
-        <div>
-          <label htmlFor="authorName" className="label">
+        {/* Author Name */}
+        <div className="form-control">
+          <label className="label">
             <span className="label-text text-lg font-semibold">
-              Author Name <span className="text-error">*</span>
+              Author Name
             </span>
           </label>
           <input
             type="text"
-            value={user?.displayName}
             name="authorName"
-            placeholder="Author Name"
+            value={user?.displayName}
+            readOnly
             className="input input-bordered input-primary w-full text-base"
-            required
-            aria-label="Author Name"
           />
         </div>
 
-        {/* Author Email Input Field */}
-        <div>
-          <label htmlFor="authorName" className="label">
+        {/* Author Email */}
+        <div className="form-control">
+          <label className="label">
             <span className="label-text text-lg font-semibold">
-              Author Email <span className="text-error">*</span>
+              Author Email
             </span>
           </label>
           <input
             type="email"
-            value={user?.email}
             name="authorEmail"
-            placeholder="Author Email"
+            value={user?.email}
+            readOnly
             className="input input-bordered input-primary w-full text-base"
-            required
-            aria-label="Author Email"
           />
         </div>
 
-        {/* Thumbnail Image URL Input Field (Optional) */}
+        {/* Thumbnail */}
         <div className="form-control">
-          <label htmlFor="thumbnailUrl" className="label">
+          <label className="label">
             <span className="label-text text-lg font-semibold">
-              Thumbnail Image URL (Optional)
+              Thumbnail Image URL
             </span>
           </label>
           <input
             type="url"
             name="photoUrl"
-            placeholder="Photo URL"
+            placeholder="https://example.com/image.jpg"
             className="input input-bordered input-primary w-full text-base"
-            aria-label="Thumbnail Image URL"
           />
         </div>
 
-        {/* Publication Date Input Field */}
+        {/* Date */}
         <div className="form-control">
-          <label htmlFor="publicationDate" className="label">
+          <label className="label">
             <span className="label-text text-lg font-semibold">
-              Publication Date <span className="text-error">*</span>
+              Publication Date
             </span>
           </label>
           <input
@@ -197,11 +211,10 @@ const PostArticles = () => {
             name="date"
             className="input input-bordered input-primary w-full text-base"
             required
-            aria-label="Publication Date"
           />
         </div>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <div className="form-control mt-8">
           <button
             type="submit"

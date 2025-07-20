@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";
-import { SlLike } from "react-icons/sl";
 import { FaHeart } from "react-icons/fa";
 import { toast } from "react-toastify";
 
@@ -45,7 +44,7 @@ const handleLike = async () => {
     );
 
     if (res.data.modifiedCount >= 0 || res.data.upsertedCount >= 0) {
-      // ✅ Update local article state safely
+      //  Update local article state safely
       setArticle((prev) => {
         const likesArray = Array.isArray(prev.likes) ? prev.likes : [];
         const alreadyLiked = likesArray.includes(user.email);
@@ -188,38 +187,6 @@ const likeCount = Array.isArray(article.likes) ? article.likes.length : 0;
   </form>
 </div>
 
-
-
-      {/* <div className="mt-6">
-        <h2 className="text-lg font-semibold mb-2">Comments</h2>
-        {Array.isArray(article.comments) && article.comments.length > 0 ? (
-          article.comments.map((comment, idx) => (
-            <div key={idx} className="border p-2 rounded mb-2 ">
-              <p className="text-sm">
-                <strong>{comment.email}</strong>{" "}
-                {typeof comment.text === "string"
-                  ? comment.text
-                  : JSON.stringify(comment.text)}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p>No comments yet</p>
-        )}
-
-        <form onSubmit={handleCommentSubmit} className="mt-4 flex flex-col gap-2">
-          <input
-            type="text"
-            name="comment"
-            placeholder="Write your comment..."
-            className="border p-2 rounded"
-            required
-          />
-          <button type="submit" className="bg-blue-500 text-white rounded p-2">
-            Submit Comment
-          </button>
-        </form>
-      </div> */}
     </div>
   );
 };

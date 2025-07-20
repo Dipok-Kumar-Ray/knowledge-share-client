@@ -22,7 +22,7 @@ const CategoryArticles = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Articles in: {categoryName}
+          <h2 className='text-green-500 font-bold'>Articles Filtering data : </h2> {categoryName}
         </motion.h2>
 
         {articles.length > 0 ? (
@@ -30,7 +30,7 @@ const CategoryArticles = () => {
             {articles.map((article) => (
               <motion.div
                 key={article._id}
-                className="bg-gray-100 rounded-lg p-4 shadow"
+                className="rounded-lg p-4 shadow"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
