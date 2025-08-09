@@ -41,24 +41,6 @@ const Login = () => {
         console.log(error.message);
       });
 
-    // jwt start
-    // fetch("https://eduhive-server-side.vercel.app/login", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ email, password }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     localStorage.setItem("token", data.token);
-    //     navigate(from);
-    //     toast.success("User Logged In Successfully!");
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.message);
-    //   });
-
-    //jwt end
-
   };
 
   return (
