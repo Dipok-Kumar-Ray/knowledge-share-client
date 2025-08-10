@@ -17,7 +17,7 @@ const ArticleDetailsPage = () => {
   const fetchArticle = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:5173/articles/${id}`);
+      const res = await axios.get(`https://eduhive-server-side.vercel.app/articles/${id}`);
       
       setArticle(res.data);
     } catch {
@@ -38,7 +38,7 @@ const handleLike = async () => {
     const token = await user.getIdToken();
 
     const res = await axios.patch(
-      `http://localhost:5173/userLike/${id}`,
+      `https://eduhive-server-side.vercel.app/userLike/${id}`,
       { userEmail: user.email },
       {
         headers: {
@@ -81,7 +81,7 @@ const handleCommentSubmit = async (e) => {
   };
 
   try {
-    const res = await axios.patch(`http://localhost:5173/comments/${id}`, {
+    const res = await axios.patch(`https://eduhive-server-side.vercel.app/comments/${id}`, {
       comment: commentObj,
     });
     if (res.data.modifiedCount) {
@@ -94,38 +94,6 @@ const handleCommentSubmit = async (e) => {
   }
 };
 
-
-  // const handleCommentSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const text = e.target.comment.value.trim();
-  //   if (!text) return;
-
-  //   const commentObj = {
-  //     email: user?.email || "Anonymous",
-  //      displayName: user?.displayName || "Anonymous",
-  // text,
-  //   };
-
-  //   try {
-  //     const res = await axios.patch(`http://localhost:5173/comments/${id}`, {
-  //       comment: commentObj,
-  //     });
-  //     if (res.data.modifiedCount) {
-  //       toast.success("Comment added!");
-  //       fetchArticle();
-  //       e.target.reset();
-  //     }
-  //   } catch {
-  //     toast.error("Failed to add comment");
-  //   }
-
-
-
-
-
-
-  // };
-
   if (loading || !article) {
     return <span className="loading loading-bars loading-xl"></span>;
   }
@@ -136,7 +104,7 @@ const likeCount = Array.isArray(article.likes) ? article.likes.length : 0;
   const commentCount = Array.isArray(article.comments) ? article.comments.length : 0;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 rounded-xl shadow-md mt-4">
+    <div className="max-w-3xl mx-auto p-6 rounded-xl shadow-md mt-20">
       <img
         src={article.photoUrl}
         alt={article.title}

@@ -1,39 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLoaderData, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 
 const UpdateArticle = () => {
-  const navigate = useNavigate()
-  const { _id, title, content, category, tags, authorName, photoUrl, date } =
-  useLoaderData();
-  const [loading, setLoading] = useState(true); 
+  const navigate = useNavigate();
 
-  setTimeout(() => {
-    setLoading(false);
-  }, 300);
+  // এখানে useLoaderData থেকে article এর সব ডাটা পাবে
+  const {
+    _id,
+    title,
+    content,
+    category,
+    tags,
+    authorName,
+    email,
+    photoUrl,
+    date,
+  } = useLoaderData();
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
   if (loading) {
     return <span className="loading loading-bars loading-xl"></span>;
   }
 
   const handleUpdateArticle = (e) => {
     e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
+    const formData = new FormData(e.target);
     const updatedArticle = Object.fromEntries(formData.entries());
-    console.log(updatedArticle);
 
-    // Send updated article data to the server
-    fetch(`http://localhost:5173//${_id}`, {
+    // readonly ফিল্ড গুলো আগের মতোই রাখা হবে (বদলবে না)
+    updatedArticle.authorName = authorName;
+    updatedArticle.email = email;
+
+    // tags কে array তে রূপান্তর (যদি থাকে)
+    if (updatedArticle.tags) {
+      updatedArticle.tags = updatedArticle.tags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag.length > 0);
+    }
+
+    fetch(`https://eduhive-server-side.vercel.app/articles/${_id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedArticle),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.modifiedCount > 0) {
-          console.log("Article updated successfully", data);
           Swal.fire({
             title: "Success!",
             text: "Your article has been updated successfully.",
@@ -41,70 +61,75 @@ const UpdateArticle = () => {
             confirmButtonText: "Cool",
             draggable: true,
           });
-          navigate('/myArticles')
-          
+          navigate("/myArticles");
+        } else {
+          Swal.fire({
+            title: "No Changes",
+            text: "No updates were made to the article.",
+            icon: "info",
+            confirmButtonText: "Okay",
+          });
         }
+      })
+      .catch((err) => {
+        console.error("Update failed:", err);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to update article. Please try again.",
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
       });
   };
 
   return (
-    <div className="flex justify-center items-center py-8">
+    <div className="flex justify-center items-center py-8 mt-20">
       <form
         onSubmit={handleUpdateArticle}
         className="w-full max-w-2xl p-8 bg-base-100 rounded-lg shadow-2xl space-y-6"
       >
         <h2 className="text-3xl font-extrabold text-center text-primary mb-6">
-          Craft Your Update Article
+          Update Your Article
         </h2>
 
-        {/* Article Title Input Field */}
+        {/* Editable Fields */}
         <div className="form-control">
-          <label htmlFor="articleTitle" className="label">
-            <span className="label-text text-lg font-semibold">
-              Article Title <span className="text-error">*</span>
-            </span>
+          <label htmlFor="title" className="label font-semibold">
+            Title <span className="text-error">*</span>
           </label>
           <input
-            type="text"
+            id="title"
             name="title"
+            type="text"
             defaultValue={title}
-            placeholder="e.g., The Impact of AI on Modern Lifestyles"
-            className="input input-bordered input-primary w-full text-base"
-            aria-label="Article Title"
+            required
+            className="input input-bordered input-primary w-full"
           />
         </div>
 
-        {/* Content Textarea Field */}
         <div className="form-control">
-          <label htmlFor="articleContent" className="label">
-            <span className="label-text text-lg font-semibold">
-              Content <span className="text-error">*</span>
-            </span>
+          <label htmlFor="content" className="label font-semibold">
+            Content <span className="text-error">*</span>
           </label>
           <textarea
-            type="text"
+            id="content"
             name="content"
             defaultValue={content}
-            placeholder="Write the full, engaging content of your article. Be thorough and provide value!"
-            className="textarea textarea-bordered textarea-primary h-48 w-full text-base resize-y"
             required
-            aria-label="Article Content"
-          ></textarea>
+            className="textarea textarea-bordered textarea-primary h-48 w-full"
+          />
         </div>
 
-        {/* Category Dropdown Field */}
         <div className="form-control">
-          <label htmlFor="articleCategory" className="label">
-            <span className="label-text text-lg font-semibold">
-              Category <span className="text-error">*</span>
-            </span>
+          <label htmlFor="category" className="label font-semibold">
+            Category <span className="text-error">*</span>
           </label>
           <select
+            id="category"
             name="category"
             defaultValue={category}
-            className="select select-bordered select-primary w-full text-base"
             required
-            aria-label="Article Category"
+            className="select select-bordered select-primary w-full"
           >
             <option value="" disabled>
               Select a category
@@ -120,77 +145,78 @@ const UpdateArticle = () => {
           </select>
         </div>
 
-        {/* Tags Input Field (Optional) */}
         <div className="form-control">
-          <label htmlFor="articleTags" className="label">
-            <span className="label-text text-lg font-semibold">
-              Tags (Optional)
-            </span>
+          <label htmlFor="tags" className="label font-semibold">
+            Tags (Optional)
           </label>
           <input
-            type="text"
+            id="tags"
             name="tags"
-            defaultValue={tags}
-            placeholder="e.g., react, javascript, frontend, webdev, programming"
-            className="input input-bordered input-primary w-full text-base"
-            aria-label="Article Tags"
-          />
-        </div>
-
-        {/* Author Name Input Field */}
-        <div>
-          <label htmlFor="authorName" className="label">
-            <span className="label-text text-lg font-semibold">
-              Author Name <span className="text-error">*</span>
-            </span>
-          </label>
-          <input
             type="text"
-            name="authorName"
-            defaultValue={authorName}
-            placeholder="Author Name"
-            className="input input-bordered input-primary w-full text-base"
-            required
-            aria-label="Author Name"
+            defaultValue={Array.isArray(tags) ? tags.join(", ") : tags || ""}
+            placeholder="e.g., react, javascript"
+            className="input input-bordered input-primary w-full"
           />
         </div>
 
-        {/* Thumbnail Image URL Input Field (Optional) */}
         <div className="form-control">
-          <label htmlFor="thumbnailUrl" className="label">
-            <span className="label-text text-lg font-semibold">
-              Thumbnail Image URL (Optional)
-            </span>
+          <label htmlFor="photoUrl" className="label font-semibold">
+            Thumbnail Image URL (Optional)
           </label>
           <input
-            type="url"
+            id="photoUrl"
             name="photoUrl"
+            type="url"
             defaultValue={photoUrl}
-            placeholder="Photo URL"
-            className="input input-bordered input-primary w-full text-base"
-            aria-label="Thumbnail Image URL"
+            className="input input-bordered input-primary w-full"
           />
         </div>
 
-        {/* Publication Date Input Field */}
         <div className="form-control">
-          <label htmlFor="publicationDate" className="label">
-            <span className="label-text text-lg font-semibold">
-              Publication Date <span className="text-error">*</span>
-            </span>
+          <label htmlFor="date" className="label font-semibold">
+            Publication Date <span className="text-error">*</span>
           </label>
           <input
-            type="date"
+            id="date"
             name="date"
-            defaultValue={date}
-            className="input input-bordered input-primary w-full text-base"
+            type="date"
+            defaultValue={date ? date.split("T")[0] : ""}
             required
-            aria-label="Publication Date"
+            className="input input-bordered input-primary w-full"
+          />
+        </div>
+
+        {/* Readonly Fields */}
+        <div className="form-control">
+          <label htmlFor="authorName" className="label font-semibold">
+            Author Name
+          </label>
+          <input
+            id="authorName"
+            name="authorName"
+            type="text"
+            value={authorName}
+            readOnly
+            className="input input-bordered input-primary w-full bg-gray-200 cursor-not-allowed"
+          />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="email" className="label font-semibold">
+            Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            value={email || ""}
+            readOnly
+            className="input input-bordered input-primary w-full bg-gray-200 cursor-not-allowed"
           />
         </div>
 
         {/* Submit Button */}
-        <div className="form-control mt-8">
+        <div className="form-control mt-6">
           <button
             type="submit"
             className="btn btn-primary btn-lg w-full text-white font-bold"

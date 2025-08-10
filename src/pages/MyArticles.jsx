@@ -16,7 +16,7 @@ const MyArticles = () => {
       const token = user?.accessToken;
       try {
         const res = await axios.get(
-          `http://localhost:5173/myArticles?email=${user.email}`,
+          `https://eduhive-server-side.vercel.app/myArticles?email=${user.email}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -64,7 +64,7 @@ const MyArticles = () => {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          fetch(`http://localhost:5173/${_id}`, {
+          fetch(`https://eduhive-server-side.vercel.app/${_id}`, {
             method: "DELETE",
           })
             .then((res) => res.json())

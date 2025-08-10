@@ -24,7 +24,7 @@ import ContactSection from "../shared/ContactSection";
       {
         index: true,
         Component: Home,
-        loader:() =>  fetch('http://localhost:5173'),
+        loader:() =>  fetch('https://eduhive-server-side.vercel.app'),
         hydrateFallbackElement: <span className="loading loading-bars loading-xl"></span>
       },
       {
@@ -58,7 +58,7 @@ import ContactSection from "../shared/ContactSection";
       {
         path: 'updateArticle/:id',
         Component: UpdateArticle,
-        loader: ({params}) => fetch(`http://localhost:5173${params.id}`),
+        loader: ({params}) => fetch(`https://eduhive-server-side.vercel.app/articles/${params.id}`),
         hydrateFallbackElement: <span className="loading loading-bars loading-xl"></span>
       },
       {

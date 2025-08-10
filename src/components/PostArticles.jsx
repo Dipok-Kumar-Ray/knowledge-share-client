@@ -1,5 +1,5 @@
 import { getIdToken } from "firebase/auth";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { AuthContext } from "../contexts/AuthContext";
 import axios from "axios";
@@ -11,9 +11,13 @@ const PostArticles = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  setTimeout(() => {
-    setLoading(false);
-  }, 300);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   if (loading) {
     return <span className="loading loading-bars loading-xl"></span>;
@@ -26,15 +30,19 @@ const PostArticles = () => {
     const formData = new FormData(form);
     const articles = Object.fromEntries(formData.entries());
 
-    // convert comma separated tag string to array
+    // tags string থেকে array তৈরি
     if (articles.tags) {
       articles.tags = articles.tags.split(",").map((tag) => tag.trim());
     }
 
+    // authorName এবং authorEmail ম্যানুয়ালি যোগ করছি (formData থেকে নয়)
+    articles.authorName = user?.displayName || "Unknown Author";
+    articles.authorEmail = user?.email || "";
+
     try {
       const token = await getIdToken(user);
       const res = await axios.post(
-        `http://localhost:5173/articles`,
+        `https://eduhive-server-side.vercel.app/articles`,
         articles,
         {
           headers: {
@@ -50,11 +58,16 @@ const PostArticles = () => {
       }
     } catch (err) {
       console.log(err);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong while adding the article!",
+      });
     }
   };
 
   return (
-    <div className="flex justify-center items-center py-8">
+    <div className="flex justify-center items-center py-8 mt-20">
       <form
         onSubmit={handleAddArticle}
         className="w-full max-w-2xl p-8 bg-base-100 rounded-lg shadow-2xl space-y-6"
@@ -112,38 +125,29 @@ const PostArticles = () => {
             <option value="Tech">Tech</option>
             <option value="Health">Health</option>
             <option value="Education">Education</option>
-
           </select>
         </div>
 
-        {/* Author Name */}
+        {/* Author Name and Email (readonly just for display) */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-lg font-semibold">
-              Author Name
-            </span>
+            <span className="label-text text-lg font-semibold">Author Name</span>
           </label>
           <input
             type="text"
-            name="authorName"
-            value={user?.displayName}
+            value={user?.displayName || ""}
             readOnly
             className="input input-bordered input-primary w-full text-base"
           />
-
         </div>
 
-        {/* Author Email */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-lg font-semibold">
-              Author Email
-            </span>
+            <span className="label-text text-lg font-semibold">Author Email</span>
           </label>
           <input
             type="email"
-            name="authorEmail"
-            value={user?.email}
+            value={user?.email || ""}
             readOnly
             className="input input-bordered input-primary w-full text-base"
           />
@@ -194,3 +198,197 @@ const PostArticles = () => {
 };
 
 export default PostArticles;
+
+
+
+
+
+
+
+
+// import { getIdToken } from "firebase/auth";
+// import { useContext, useState, useEffect } from "react";
+// import Swal from "sweetalert2";
+// import { AuthContext } from "../contexts/AuthContext";
+// import axios from "axios";
+// import { toast } from "react-toastify";
+// import { useNavigate } from "react-router";
+
+// const PostArticles = () => {
+//   const { user } = useContext(AuthContext);
+//   const [loading, setLoading] = useState(true);
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     const timer = setTimeout(() => {
+//       setLoading(false);
+//     }, 300);
+
+//     return () => clearTimeout(timer);
+//   }, []);
+
+//   if (loading) {
+//     return <span className="loading loading-bars loading-xl"></span>;
+//   }
+
+//   const handleAddArticle = async (e) => {
+//     e.preventDefault();
+
+//     const form = e.target;
+//     const formData = new FormData(form);
+//     const articles = Object.fromEntries(formData.entries());
+
+//     // convert comma separated tag string to array
+//  if (articles.tags) {
+//     articles.tags = articles.tags.split(",").map((tag) => tag.trim());
+//   }
+
+//     try {
+//       const token = await getIdToken(user);
+//       const res = await axios.post(
+//         `https://eduhive-server-side.vercel.app/articles`,
+//         articles,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+//       if (res) {
+//         toast.success("Article added successfully!");
+//         navigate("/myArticles");
+//       } else {
+//         console.log("verification failed");
+//       }
+//     } catch (err) {
+//       console.log(err);
+//       Swal.fire({
+//         icon: "error",
+//         title: "Oops...",
+//         text: "Something went wrong while adding the article!",
+//       });
+//     }
+//   };
+
+//   return (
+//     <div className="flex justify-center items-center py-8 mt-20">
+//       <form
+//         onSubmit={handleAddArticle}
+//         className="w-full max-w-2xl p-8 bg-base-100 rounded-lg shadow-2xl space-y-6"
+//       >
+//         <h2 className="text-3xl font-extrabold text-center text-primary mb-6">
+//           Craft Your New Article
+//         </h2>
+
+//         {/* Title */}
+//         <div className="form-control">
+//           <label className="label">
+//             <span className="label-text text-lg font-semibold">
+//               Article Title <span className="text-error">*</span>
+//             </span>
+//           </label>
+//           <input
+//             type="text"
+//             name="title"
+//             placeholder="e.g., The Impact of AI on Modern Lifestyles"
+//             className="input input-bordered input-primary w-full text-base"
+//             required
+//           />
+//         </div>
+
+//         {/* Content */}
+//         <div className="form-control">
+//           <label className="label">
+//             <span className="label-text text-lg font-semibold">
+//               Content <span className="text-error">*</span>
+//             </span>
+//           </label>
+//           <textarea
+//             name="content"
+//             placeholder="Write the full, engaging content of your article."
+//             className="textarea textarea-bordered textarea-primary h-48 w-full text-base resize-y"
+//             required
+//           ></textarea>
+//         </div>
+
+//         {/* Category Dropdown */}
+//         <div className="form-control">
+//           <label className="label">
+//             <span className="label-text text-lg font-semibold">
+//               Category <span className="text-error">*</span>
+//             </span>
+//           </label>
+//           <select
+//             name="category"
+//             className="select select-bordered select-primary w-full text-base"
+//             required
+//           >
+//             <option value="" disabled>
+//               Select a category
+//             </option>
+//             <option value="Tech">Tech</option>
+//             <option value="Health">Health</option>
+//             <option value="Education">Education</option>
+//           </select>
+//         </div>
+
+// <input
+//   type="text"
+//   name="authorName"
+//   defaultValue={user?.displayName || ""}
+//   readOnly
+//   className="input input-bordered input-primary w-full text-base"
+// />
+
+// <input
+//   type="email"
+//   name="authorEmail"
+//   defaultValue={user?.email || ""}
+//   readOnly
+//   className="input input-bordered input-primary w-full text-base"
+// />
+
+
+//         {/* Thumbnail */}
+//         <div className="form-control">
+//           <label className="label">
+//             <span className="label-text text-lg font-semibold">
+//               Thumbnail Image URL
+//             </span>
+//           </label>
+//           <input
+//             type="url"
+//             name="photoUrl"
+//             placeholder="https://example.com/image.jpg"
+//             className="input input-bordered input-primary w-full text-base"
+//           />
+//         </div>
+
+//         {/* Date */}
+//         <div className="form-control">
+//           <label className="label">
+//             <span className="label-text text-lg font-semibold">Publication Date</span>
+//           </label>
+//           <input
+//             type="date"
+//             name="date"
+//             className="input input-bordered input-primary w-full text-base"
+//             required
+//           />
+//         </div>
+
+//         {/* Submit */}
+//         <div className="form-control mt-8">
+//           <button
+//             type="submit"
+//             className="btn btn-primary btn-lg w-full text-white font-bold"
+//           >
+//             Add Post Article
+//           </button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default PostArticles;

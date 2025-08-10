@@ -25,7 +25,7 @@ const Register = () => {
     const photo = form.photo.value;
     const email = form.email.value;
     const password = form.password.value;
-    console.log(name, photo, email, password);
+    // console.log(name, photo, email, password);
 
     // const formData = new FormData(form);
     // const data = Object.fromEntries(formData.entries());
@@ -34,7 +34,7 @@ const Register = () => {
     //update user profile
     createUser(email, password)
       .then((result) => {
-        console.log(result.user);
+        // console.log(result.user);
         updateProfile(result.user, {
           displayName: name,
           photoURL: photo,
