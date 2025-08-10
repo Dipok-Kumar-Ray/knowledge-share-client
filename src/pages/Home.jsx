@@ -9,10 +9,10 @@ const Home = () => {
   return (
     <div>
       <Motion />
-      <CategoryArticles/>
-      <FeaturedArticles/>
       <TopContributors/>
       <FeaturedMentors/>
+      <FeaturedArticles/>
+      <CategoryArticles/>
     </div>
   );
 };

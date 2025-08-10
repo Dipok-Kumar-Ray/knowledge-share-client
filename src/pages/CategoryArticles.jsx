@@ -14,7 +14,7 @@ const CategoryArticles = () => {
   }, [categoryName]);
 
   return (
-    <section className="py-12 px-5">
+    <section className="py-12 px-5 text-center">
       <div className="max-w-5xl mx-auto">
         <motion.h2
           className="text-3xl font-bold mb-6"
@@ -22,7 +22,7 @@ const CategoryArticles = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className='text-green-500 font-bold'>Articles Filtering data : </h2> {categoryName}
+          <h2 className='text-green-500 font-bold'>Articles Filtering data  </h2> {categoryName}
         </motion.h2>
 
         {articles.length > 0 ? (
@@ -43,7 +43,7 @@ const CategoryArticles = () => {
             ))}
           </div>
         ) : (
-          <p>No articles found in this category.</p>
+          <p className='text-red-400'>No articles found in this category.</p>
         )}
       </div>
     </section>

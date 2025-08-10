@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 
-
 const articles = [
   {
     id: 1,
@@ -44,6 +43,20 @@ const articles = [
     author: 'David Lee',
     date: '2025-06-10',
   },
+  {
+    id: 7,
+    title: 'Building Scalable Microservices',
+    excerpt: 'Learn how microservices architecture can help scale your applications efficiently...',
+    author: 'Olivia Martinez',
+    date: '2025-06-09',
+  },
+  {
+    id: 8,
+    title: 'The Power of TypeScript in Modern Development',
+    excerpt: 'TypeScript brings strong typing to JavaScript, making your codebase more reliable...',
+    author: 'Chris Evans',
+    date: '2025-06-08',
+  },
 ];
 
 const FeaturedArticles = () => {
@@ -51,7 +64,7 @@ const FeaturedArticles = () => {
     <section className="py-16 px-5">
       <div className="w-11/12 mx-auto">
         <motion.h2
-          className="text-3xl md:text-4xl font-bold text-center mb-10"
+          className="text-3xl md:text-4xl font-bold text-center mb-10 text-gray-900 dark:text-gray-100"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -59,18 +72,27 @@ const FeaturedArticles = () => {
           Featured Articles
         </motion.h2>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {articles.map((article, index) => (
             <motion.div
               key={article.id}
-              className="  rounded-2xl shadow-lg p-6 hover:shadow-2xl transition"
+              className="rounded-2xl shadow-lg p-6 hover:shadow-2xl transition bg-white dark:bg-gray-800 group"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{ scale: 1.02 }}
             >
-              <h3 className="text-xl font-semibold mb-2">{article.title}</h3>
-              <p className="text-gray-600 mb-4">{article.excerpt}</p>
-              <div className="text-sm text-gray-500">
+              <h3
+                className="text-xl font-semibold mb-2 text-blue-600 dark:text-blue-400
+                  transition-all duration-500 ease-out
+                  group-hover:text-transparent group-hover:bg-clip-text 
+                  group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:to-purple-500
+                  transform group-hover:-translate-y-1"
+              >
+                {article.title}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">{article.excerpt}</p>
+              <div className="text-sm text-gray-500 dark:text-gray-400">
                 By <span className="font-medium">{article.author}</span> ·{' '}
                 {new Date(article.date).toLocaleDateString('en-US', {
                   year: 'numeric',
