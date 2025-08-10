@@ -58,7 +58,7 @@ const Register = () => {
       });
   };
   return (
-    <div className=" max-w-sm mx-auto  p-9 rounded-2xl mt-9 shadow-lg bg-base-200 mb-12">
+    <div className=" max-w-sm mx-auto  p-9 rounded-2xl mt-20 shadow-lg bg-base-200 mb-12">
       <h2 className="text-3xl mb-9">Please Register Now </h2>
       <form className="space-y-4" onSubmit={handleRegister}>
         {/* name field */}
