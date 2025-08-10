@@ -34,7 +34,7 @@ const PostArticles = () => {
     try {
       const token = await getIdToken(user);
       const res = await axios.post(
-        `https://eduhive-server-side.vercel.app/articles`,
+        `http://localhost:5173/articles`,
         articles,
         {
           headers: {

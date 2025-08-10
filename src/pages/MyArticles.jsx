@@ -11,12 +11,12 @@ const MyArticles = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user?.email) return; // user না থাকলে API call হবে না
+      if (!user?.email) return; 
 
       const token = user?.accessToken;
       try {
         const res = await axios.get(
-          `https://eduhive-server-side.vercel.app/myArticles?email=${user.email}`,
+          `http://localhost:5173/myArticles?email=${user.email}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -64,7 +64,7 @@ const MyArticles = () => {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          fetch(`https://eduhive-server-side.vercel.app/${_id}`, {
+          fetch(`http://localhost:5173/${_id}`, {
             method: "DELETE",
           })
             .then((res) => res.json())
@@ -176,7 +176,7 @@ export default MyArticles;
 //       const token = user?.accessToken;
 //       try {
 //         const res = await axios.get(
-//           `https://eduhive-server-side.vercel.app/myArticles?email=${user?.email}`,
+//           `http://localhost:5173/myArticles?email=${user?.email}`,
 //           {
 //             headers: {
 //               Authorization: `Bearer ${token}`,
@@ -224,7 +224,7 @@ export default MyArticles;
 //       })
 //       .then((result) => {
 //         if (result.isConfirmed) {
-//           fetch(`https://eduhive-server-side.vercel.app/${_id}`, {
+//           fetch(`http://localhost:5173/${_id}`, {
 //             method: "DELETE",
 //           })
 //             .then((res) => res.json())

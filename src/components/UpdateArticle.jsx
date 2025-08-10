@@ -23,7 +23,7 @@ const UpdateArticle = () => {
     console.log(updatedArticle);
 
     // Send updated article data to the server
-    fetch(`https://eduhive-server-side.vercel.app//${_id}`, {
+    fetch(`http://localhost:5173//${_id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

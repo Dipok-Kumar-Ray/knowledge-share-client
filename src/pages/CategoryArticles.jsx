@@ -7,7 +7,7 @@ const CategoryArticles = () => {
   const [articles, setArticles] = useState([]);
 
   useEffect(() => {
-    fetch(`https://eduhive-server-side.vercel.app/articles?category=${categoryName}`)
+    fetch(`http://localhost:5173/articles?category=${categoryName}`)
       .then((res) => res.json())
       .then((data) => setArticles(data))
       .catch((err) => console.error(err));

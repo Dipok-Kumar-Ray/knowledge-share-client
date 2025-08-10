@@ -17,7 +17,7 @@ const ArticleDetailsPage = () => {
   const fetchArticle = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`https://eduhive-server-side.vercel.app/articles/${id}`);
+      const res = await axios.get(`http://localhost:5173/articles/${id}`);
       
       setArticle(res.data);
     } catch {
@@ -38,7 +38,7 @@ const handleLike = async () => {
     const token = await user.getIdToken();
 
     const res = await axios.patch(
-      `https://eduhive-server-side.vercel.app/userLike/${id}`,
+      `http://localhost:5173/userLike/${id}`,
       { userEmail: user.email },
       {
         headers: {
@@ -81,7 +81,7 @@ const handleCommentSubmit = async (e) => {
   };
 
   try {
-    const res = await axios.patch(`https://eduhive-server-side.vercel.app/comments/${id}`, {
+    const res = await axios.patch(`http://localhost:5173/comments/${id}`, {
       comment: commentObj,
     });
     if (res.data.modifiedCount) {
@@ -107,7 +107,7 @@ const handleCommentSubmit = async (e) => {
   //   };
 
   //   try {
-  //     const res = await axios.patch(`https://eduhive-server-side.vercel.app/comments/${id}`, {
+  //     const res = await axios.patch(`http://localhost:5173/comments/${id}`, {
   //       comment: commentObj,
   //     });
   //     if (res.data.modifiedCount) {
