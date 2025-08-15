@@ -62,7 +62,7 @@ const articles = [
 const FeaturedArticles = () => {
   return (
     <section className="py-16 px-5">
-      <div className="w-11/12 mx-auto">
+      <div className="max-w-7xl mx-auto">
         <motion.h2
           className="text-3xl md:text-4xl font-bold text-center mb-10 text-gray-900 dark:text-gray-100"
           initial={{ opacity: 0, y: -30 }}

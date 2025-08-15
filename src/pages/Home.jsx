@@ -1,4 +1,4 @@
-import TopContributors from "../extraSection/TopContributors";
+// import TopContributors from "../extraSection/TopContributors";
 import FeaturedMentors from "../extraSection/FeaturedMentors ";
 import Motion from "./Motion";
 import FeaturedArticles from "./FeaturedArticles";
@@ -9,7 +9,7 @@ const Home = () => {
   return (
     <div>
       <Motion />
-      <TopContributors/>
+      {/* <TopContributors/> */}
       <FeaturedMentors/>
       <FeaturedArticles/>
       <CategoryArticles/>

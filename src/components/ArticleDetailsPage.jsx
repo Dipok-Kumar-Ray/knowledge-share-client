@@ -108,7 +108,7 @@ const likeCount = Array.isArray(article.likes) ? article.likes.length : 0;
       <img
         src={article.photoUrl}
         alt={article.title}
-        className="w-full h-64 object-cover rounded-lg mb-4"
+        className="w-full h-full object-cover rounded-lg mb-4"
       />
 
       <h1 className="text-3xl font-bold text-center mb-2">{article.title}</h1>
