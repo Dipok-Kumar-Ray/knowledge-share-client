@@ -9,36 +9,28 @@ const MyArticles = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!user?.email) return;
+useEffect(() => {
+  const fetchData = async () => {
+    if (!user?.email) return;
+    const token = await user.getIdToken();
 
-      const token = user?.accessToken;
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/myArticles?email=${user.email}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setArticles(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Error fetching articles:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchData();
+}, [user]);
 
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/myArticles?email=${user.email}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        console.log("API Response:", res.data);
-
-        // যদি data array হয় তাহলে সেট করো, না হলে empty array
-        setArticles(Array.isArray(res.data) ? res.data : []);
-      } catch (err) {
-        console.error("Error fetching articles:", err);
-        setArticles([]); // error হলে empty array
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [user]);
 
   if (loading) {
     return (
