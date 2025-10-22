@@ -17,7 +17,7 @@ const ArticleDetailsPage = () => {
   const fetchArticle = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`https://eduhive-server-side.vercel.app/articles/${id}`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/articles/${id}`);
       
       setArticle(res.data);
     } catch {

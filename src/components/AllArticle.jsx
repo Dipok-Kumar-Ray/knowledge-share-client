@@ -18,7 +18,7 @@ const AllArticle = () => {
   const fetchArticles = async (selectedCategory, selectedTag) => {
     const token = user?.accessToken;
     try {
-      const res = await axios.get(`https://eduhive-server-side.vercel.app/articles`, {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/articles`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

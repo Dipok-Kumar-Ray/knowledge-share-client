@@ -11,12 +11,13 @@ const MyArticles = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user?.email) return; 
+      if (!user?.email) return;
 
       const token = user?.accessToken;
+
       try {
         const res = await axios.get(
-          `https://eduhive-server-side.vercel.app/myArticles?email=${user.email}`,
+          `${import.meta.env.VITE_API_URL}/myArticles?email=${user.email}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -35,11 +36,16 @@ const MyArticles = () => {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [user]);
 
   if (loading) {
-    return <span className="loading loading-bars loading-xl"></span>;
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <span className="loading loading-bars loading-xl"></span>
+      </div>
+    );
   }
 
   // handleDelete
@@ -64,7 +70,7 @@ const MyArticles = () => {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          fetch(`https://eduhive-server-side.vercel.app/articles/${_id}`, {
+          fetch(`${import.meta.env.VITE_API_URL}/articles/${_id}`, {
             method: "DELETE",
           })
             .then((res) => res.json())
@@ -81,6 +87,10 @@ const MyArticles = () => {
                 );
                 setArticles(newArticles);
               }
+            })
+            .catch((error) => {
+              console.error("Error deleting article:", error);
+              Swal.fire("Error!", "Something went wrong.", "error");
             });
         }
       });
@@ -104,7 +114,7 @@ const MyArticles = () => {
           <tbody>
             {Array.isArray(articles) && articles.length > 0 ? (
               articles.map((article) => (
-                <tr key={article._id} className="hover:orange-100">
+                <tr key={article._id} className="hover:bg-orange-100">
                   <td className="px-3 sm:px-4 py-2 border break-words">
                     {article.title}
                   </td>
@@ -153,11 +163,3 @@ const MyArticles = () => {
 };
 
 export default MyArticles;
-
-
-
-
-
-
-
-

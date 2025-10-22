@@ -51,7 +51,7 @@ import ContactSection from "../shared/ContactSection";
       },
       {
         path: 'myArticles',
-        loader: () => fetch('http://localhost:5173'),
+        loader: () => fetch('https://eduhive-server-side.vercel.app/myArticles'),
         hydrateFallbackElement: <span className="loading loading-bars loading-xl"></span>,
         element: <PrivateRoute><MyArticles></MyArticles></PrivateRoute>
       },
