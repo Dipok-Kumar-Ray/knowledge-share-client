@@ -38,7 +38,7 @@ const handleLike = async () => {
     const token = await user.getIdToken();
 
     const res = await axios.patch(
-      `https://eduhive-server-side.vercel.app/userLike/${id}`,
+      `${import.meta.env.VITE_API_URL}/userLike/${id}`,
       { userEmail: user.email },
       {
         headers: {
@@ -81,7 +81,7 @@ const handleCommentSubmit = async (e) => {
   };
 
   try {
-    const res = await axios.patch(`https://eduhive-server-side.vercel.app/comments/${id}`, {
+    const res = await axios.patch(`${import.meta.env.VITE_API_URL}/comments/${id}`, {
       comment: commentObj,
     });
     if (res.data.modifiedCount) {

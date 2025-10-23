@@ -20,7 +20,11 @@ const PostArticles = () => {
   }, []);
 
   if (loading) {
-    return <span className="loading loading-bars loading-xl"></span>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="loading loading-bars loading-xl text-primary"></span>
+      </div>
+    );
   }
 
   const handleAddArticle = async (e) => {
@@ -30,12 +34,12 @@ const PostArticles = () => {
     const formData = new FormData(form);
     const articles = Object.fromEntries(formData.entries());
 
-    // tags string থেকে array তৈরি
+    // Convert tags to array
     if (articles.tags) {
       articles.tags = articles.tags.split(",").map((tag) => tag.trim());
     }
 
-    // authorName এবং authorEmail ম্যানুয়ালি যোগ করছি (formData থেকে নয়)
+    // Add author info
     articles.authorName = user?.displayName || "Unknown Author";
     articles.authorEmail = user?.email || "";
 
@@ -53,11 +57,9 @@ const PostArticles = () => {
       if (res) {
         toast.success("Article added successfully!");
         navigate("/myArticles");
-      } else {
-        console.log("verification failed");
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -67,19 +69,20 @@ const PostArticles = () => {
   };
 
   return (
-    <div className="flex justify-center items-center py-8 mt-20">
+    <div className="min-h-screen flex justify-center items-center py-10 px-4 mt-15 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <form
         onSubmit={handleAddArticle}
-        className="w-full max-w-2xl p-8 bg-base-100 rounded-lg shadow-2xl space-y-6"
+        className="w-full max-w-2xl p-8 md:p-10 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 transition-all duration-500 space-y-6"
       >
-        <h2 className="text-3xl font-extrabold text-center text-primary mb-6">
+        {/* Title */}
+        <h2 className="text-3xl md:text-4xl font-extrabold text-center text-primary dark:text-blue-400 mb-8">
           Craft Your New Article
         </h2>
 
-        {/* Title */}
+        {/* Article Title */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-lg font-semibold">
+            <span className="label-text text-base md:text-lg font-semibold dark:text-gray-200">
               Article Title <span className="text-error">*</span>
             </span>
           </label>
@@ -87,7 +90,7 @@ const PostArticles = () => {
             type="text"
             name="title"
             placeholder="e.g., The Impact of AI on Modern Lifestyles"
-            className="input input-bordered input-primary w-full text-base"
+            className="input input-bordered input-primary w-full text-base dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 focus:ring-2 focus:ring-primary/50 transition-all"
             required
           />
         </div>
@@ -95,28 +98,28 @@ const PostArticles = () => {
         {/* Content */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-lg font-semibold">
+            <span className="label-text text-base md:text-lg font-semibold dark:text-gray-200">
               Content <span className="text-error">*</span>
             </span>
           </label>
           <textarea
             name="content"
             placeholder="Write the full, engaging content of your article."
-            className="textarea textarea-bordered textarea-primary h-48 w-full text-base resize-y"
+            className="textarea textarea-bordered textarea-primary h-48 w-full text-base resize-y dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 focus:ring-2 focus:ring-primary/50 transition-all"
             required
           ></textarea>
         </div>
 
-        {/* Category Dropdown */}
+        {/* Category */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-lg font-semibold">
+            <span className="label-text text-base md:text-lg font-semibold dark:text-gray-200">
               Category <span className="text-error">*</span>
             </span>
           </label>
           <select
             name="category"
-            className="select select-bordered select-primary w-full text-base"
+            className="select select-bordered select-primary w-full text-base dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 focus:ring-2 focus:ring-primary/50 transition-all"
             required
           >
             <option value="" disabled>
@@ -128,35 +131,56 @@ const PostArticles = () => {
           </select>
         </div>
 
-        {/* Author Name and Email (readonly just for display) */}
+        {/* Tags */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-lg font-semibold">Author Name</span>
+            <span className="label-text text-base md:text-lg font-semibold dark:text-gray-200">
+              Tags (comma separated)
+            </span>
           </label>
           <input
             type="text"
-            value={user?.displayName || ""}
-            readOnly
-            className="input input-bordered input-primary w-full text-base"
+            name="tags"
+            placeholder="e.g., AI, Machine Learning, Future"
+            className="input input-bordered input-primary w-full text-base dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 focus:ring-2 focus:ring-primary/50 transition-all"
           />
         </div>
 
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text text-lg font-semibold">Author Email</span>
-          </label>
-          <input
-            type="email"
-            value={user?.email || ""}
-            readOnly
-            className="input input-bordered input-primary w-full text-base"
-          />
+        {/* Author Info */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text text-base md:text-lg font-semibold dark:text-gray-200">
+                Author Name
+              </span>
+            </label>
+            <input
+              type="text"
+              value={user?.displayName || ""}
+              readOnly
+              className="input input-bordered input-primary w-full text-base dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 cursor-not-allowed"
+            />
+          </div>
+
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text text-base md:text-lg font-semibold dark:text-gray-200">
+                Author Email
+              </span>
+            </label>
+            <input
+              type="email"
+              value={user?.email || ""}
+              readOnly
+              className="input input-bordered input-primary w-full text-base dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 cursor-not-allowed"
+            />
+          </div>
         </div>
 
         {/* Thumbnail */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-lg font-semibold">
+            <span className="label-text text-base md:text-lg font-semibold dark:text-gray-200">
               Thumbnail Image URL
             </span>
           </label>
@@ -164,21 +188,21 @@ const PostArticles = () => {
             type="url"
             name="photoUrl"
             placeholder="https://example.com/image.jpg"
-            className="input input-bordered input-primary w-full text-base"
+            className="input input-bordered input-primary w-full text-base dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 focus:ring-2 focus:ring-primary/50 transition-all"
           />
         </div>
 
         {/* Date */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-lg font-semibold">
+            <span className="label-text text-base md:text-lg font-semibold dark:text-gray-200">
               Publication Date
             </span>
           </label>
           <input
             type="date"
             name="date"
-            className="input input-bordered input-primary w-full text-base"
+            className="input input-bordered input-primary w-full text-base dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 focus:ring-2 focus:ring-primary/50 transition-all"
             required
           />
         </div>
@@ -187,7 +211,7 @@ const PostArticles = () => {
         <div className="form-control mt-8">
           <button
             type="submit"
-            className="btn btn-primary btn-lg w-full text-white font-bold"
+            className="btn btn-primary btn-lg w-full text-white font-bold hover:scale-[1.02] transition-transform duration-300"
           >
             Add Post Article
           </button>
@@ -198,4 +222,3 @@ const PostArticles = () => {
 };
 
 export default PostArticles;
-

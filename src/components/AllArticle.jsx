@@ -9,13 +9,14 @@ const AllArticle = () => {
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState("All");
   const [tag, setTag] = useState("All");
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchArticles(category, tag);
+    fetchArticles(category, tag, search);
   }, [user]);
 
-  const fetchArticles = async (selectedCategory, selectedTag) => {
+  const fetchArticles = async (selectedCategory, selectedTag, searchText) => {
     const token = user?.accessToken;
     try {
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/articles`, {
@@ -25,6 +26,7 @@ const AllArticle = () => {
         params: {
           category: selectedCategory !== "All" ? selectedCategory : undefined,
           tag: selectedTag !== "All" ? selectedTag : undefined,
+          search: searchText || undefined,
         },
       });
       setArticles(res.data);
@@ -37,7 +39,7 @@ const AllArticle = () => {
 
   const handleFilter = () => {
     setLoading(true);
-    fetchArticles(category, tag);
+    fetchArticles(category, tag, search);
   };
 
   const handleReadMore = (id) => {
@@ -58,29 +60,40 @@ const AllArticle = () => {
 
   return (
     <div className="container mx-auto px-6 mt-20">
-      <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-primary">
+      <h1 className="text-3xl md:text-4xl font-bold text-center mb-10 text-primary">
         All Articles
       </h1>
 
-      {/* Filter Section */}
-      <div className="flex flex-wrap justify-center gap-4 mb-8">
-        <select
-          className="select select-bordered"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option>All</option>
-          <option>Tech</option>
-          <option>Health</option>
-          <option>Education</option>
-        </select>
+      {/* Filter/Search Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center w-full sm:w-auto">
+          <div className="flex items-center gap-3">
+            <input
+              type="text"
+              placeholder="Search articles..."
+              className="input input-bordered w-64"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <select
+              className="select select-bordered"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option>All</option>
+              <option>Tech</option>
+              <option>Health</option>
+              <option>Education</option>
+            </select>
+          </div>
 
-        <button
-          className="btn btn-primary shadow-md hover:shadow-lg transition-all duration-300"
-          onClick={handleFilter}
-        >
-          Filter
-        </button>
+          <button
+            className="btn btn-primary shadow-md hover:shadow-lg transition-all duration-300"
+            onClick={handleFilter}
+          >
+            Filter
+          </button>
+        </div>
       </div>
 
       {/* Article Cards */}
