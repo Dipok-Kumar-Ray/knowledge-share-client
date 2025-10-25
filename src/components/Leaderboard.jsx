@@ -1,33 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAppTheme } from '../hooks/useAppTheme';
 import { Link } from 'react-router';
+import { useQuery } from '@tanstack/react-query';
 
 const Leaderboard = () => {
   const { theme } = useTheme();
   const { getColor } = useAppTheme();
-  const [leaderboard, setLeaderboard] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/leaderboard`)
-      .then(res => res.json())
-      .then(data => {
-        setLeaderboard(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching leaderboard:', error);
-        setLoading(false);
-      });
-  }, []);
+  // Fetch leaderboard data with TanStack Query
+  const { data: leaderboard = [], isLoading, isError, refetch } = useQuery({
+    queryKey: ['leaderboard'],
+    queryFn: async () => {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/leaderboard`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch leaderboard');
+      }
+      return response.json();
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: 30 * 1000, // Refetch every 30 seconds
+  });
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-base-200">
         <div className="text-center">
           <span className="loading loading-spinner loading-lg text-primary"></span>
           <p className="mt-4 text-base-content/70">Loading leaderboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-base-200">
+        <div className="text-center">
+          <p className="text-error">Error loading leaderboard. Please try again later.</p>
+          <button className="btn btn-primary mt-4" onClick={refetch}>Retry</button>
         </div>
       </div>
     );

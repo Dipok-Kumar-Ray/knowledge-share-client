@@ -1,48 +1,41 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { FiTag } from "react-icons/fi";
+import { useQuery } from '@tanstack/react-query';
 
 const AllArticle = () => {
   const { user } = useContext(AuthContext);
   const { theme } = useTheme();
   const { getColor } = useAppTheme();
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState("All");
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchArticles(category, search);
-  }, [user]);
-
-  const fetchArticles = async (selectedCategory, searchText) => {
-    const token = user?.accessToken;
-    try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/articles`, {
+  // Fetch articles with TanStack Query
+  const { data: articles = [], isLoading, isError, refetch } = useQuery({
+    queryKey: ['articles', category, search],
+    queryFn: async () => {
+      const token = user?.accessToken;
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/articles`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         params: {
-          category: selectedCategory !== "All" ? selectedCategory : undefined,
-          search: searchText || undefined,
+          category: category !== "All" ? category : undefined,
+          search: search || undefined,
         },
       });
-      setArticles(res.data);
-    } catch (err) {
-      console.error("Failed to fetch articles:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+      return response.data;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   const handleFilter = () => {
-    setLoading(true);
-    fetchArticles(category, search);
+    refetch();
   };
 
   const handleReadMore = (id) => {
@@ -53,10 +46,21 @@ const AllArticle = () => {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-base-200">
         <span className="loading loading-bars loading-xl text-primary"></span>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-base-200">
+        <div className="text-center">
+          <p className="text-error">Failed to load articles. Please try again later.</p>
+          <button className="btn btn-primary mt-4" onClick={refetch}>Retry</button>
+        </div>
       </div>
     );
   }

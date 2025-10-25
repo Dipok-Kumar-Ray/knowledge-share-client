@@ -1,6 +1,6 @@
 import axios from "axios";
 import { format } from "date-fns";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
@@ -8,50 +8,45 @@ import { useAppTheme } from "../hooks/useAppTheme";
 import { FaHeart } from "react-icons/fa";
 import { FiFileText, FiTag as FiTagIcon } from "react-icons/fi";
 import { toast } from "react-toastify";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const ArticleDetailsPage = () => {
-  const [loading, setLoading] = useState(true);
-  const [article, setArticle] = useState(null);
-  const [authorData, setAuthorData] = useState(null);
+  const [commentText, setCommentText] = useState("");
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const { theme } = useTheme();
   const { getColor } = useAppTheme();
+  const queryClient = useQueryClient();
 
-  const fetchArticle = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/articles/${id}`);
-      setArticle(res.data);
+  // Fetch article data with TanStack Query
+  const { data: article, isLoading, isError } = useQuery({
+    queryKey: ['article', id],
+    queryFn: async () => {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/articles/${id}`);
+      return response.data;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
-      // Fetch author gamification data
-      if (res.data.authorEmail) {
-        try {
-          const authorRes = await axios.get(
-            `${import.meta.env.VITE_API_URL}/user/profile/${res.data.authorEmail}`
-          );
-          setAuthorData(authorRes.data);
-        } catch {
-          console.log("Could not fetch author data");
-        }
-      }
-    } catch {
-      toast.error("Failed to load article");
-    }
-    setLoading(false);
-  };
+  // Fetch author gamification data
+  const { data: authorData } = useQuery({
+    queryKey: ['authorProfile', article?.authorEmail],
+    queryFn: async () => {
+      if (!article?.authorEmail) return null;
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/profile/${article.authorEmail}`);
+      return response.data;
+    },
+    enabled: !!article?.authorEmail,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
-  useEffect(() => {
-    fetchArticle();
-  }, [id]);
-
-  const handleLike = async () => {
-    if (!user?.email) return toast.error("Please login to like");
-
-    try {
+  // Mutation for liking an article
+  const likeMutation = useMutation({
+    mutationFn: async () => {
+      if (!user?.email) throw new Error("Please login to like");
+      
       const token = await user.getIdToken();
-
-      const res = await axios.patch(
+      const response = await axios.patch(
         `${import.meta.env.VITE_API_URL}/userLike/${id}`,
         { userEmail: user.email },
         {
@@ -60,58 +55,59 @@ const ArticleDetailsPage = () => {
           },
         }
       );
-
-      if (res.data.modifiedCount >= 0 || res.data.upsertedCount >= 0) {
-        // Update local article state safely
-        setArticle((prev) => {
-          const likesArray = Array.isArray(prev.likes) ? prev.likes : [];
-          const alreadyLiked = likesArray.includes(user.email);
-          const newLikes = alreadyLiked
-            ? likesArray.filter((email) => email !== user.email)
-            : [...likesArray, user.email];
-
-          return {
-            ...prev,
-            likes: newLikes,
-          };
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to update like");
+      return response.data;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch the article data
+      queryClient.invalidateQueries({ queryKey: ['article', id] });
+      toast.success("Like updated!");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update like");
     }
-  };
+  });
 
-  const handleCommentSubmit = async (e) => {
-    e.preventDefault();
-    const text = e.target.comment.value.trim();
-    if (!text) return;
+  // Mutation for adding a comment
+  const commentMutation = useMutation({
+    mutationFn: async (commentText) => {
+      if (!commentText.trim()) throw new Error("Comment cannot be empty");
+      
+      const commentObj = {
+        email: user?.email || "Anonymous",
+        displayName: user?.displayName || "Anonymous",
+        text: commentText,
+        userEmail: user?.email,
+      };
 
-    const commentObj = {
-      email: user?.email || "Anonymous",
-      displayName: user?.displayName || "Anonymous",
-      text,
-      userEmail: user?.email,
-    };
-
-    try {
-      const res = await axios.patch(
+      const response = await axios.patch(
         `${import.meta.env.VITE_API_URL}/comments/${id}`,
         {
           comment: commentObj,
         }
       );
-      if (res.data.modifiedCount) {
-        toast.success("Comment added!");
-        fetchArticle();
-        e.target.reset();
-      }
-    } catch {
-      toast.error("Failed to add comment");
+      return response.data;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch the article data
+      queryClient.invalidateQueries({ queryKey: ['article', id] });
+      setCommentText("");
+      toast.success("Comment added!");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to add comment");
     }
+  });
+
+  const handleLike = () => {
+    likeMutation.mutate();
   };
 
-  if (loading || !article) {
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+    commentMutation.mutate(commentText);
+  };
+
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-base-200">
         <span className="loading loading-bars loading-xl text-primary"></span>
@@ -119,15 +115,30 @@ const ArticleDetailsPage = () => {
     );
   }
 
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-base-200">
+        <div className="text-center">
+          <p className="text-error">Failed to load article. Please try again later.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!article) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-base-200">
+        <div className="text-center">
+          <p className="text-base-content/70">Article not found.</p>
+        </div>
+      </div>
+    );
+  }
+
   // Like button rendering part
-  const hasLiked =
-    Array.isArray(article.likes) && article.likes.includes(user?.email);
-  const likeCount = Array.isArray(article.likes)
-    ? article.likes.length
-    : 0;
-  const commentCount = Array.isArray(article.comments)
-    ? article.comments.length
-    : 0;
+  const hasLiked = Array.isArray(article.likes) && article.likes.includes(user?.email);
+  const likeCount = Array.isArray(article.likes) ? article.likes.length : 0;
+  const commentCount = Array.isArray(article.comments) ? article.comments.length : 0;
 
   return (
     <div className="max-w-3xl mx-auto p-6 rounded-xl shadow-md mt-20 bg-base-100">
@@ -221,6 +232,7 @@ const ArticleDetailsPage = () => {
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={handleLike}
+          disabled={likeMutation.isPending}
           className={`flex items-center gap-2 px-4 py-2 rounded-full ${
             hasLiked
               ? "bg-error/10 text-error"
@@ -246,12 +258,15 @@ const ArticleDetailsPage = () => {
               placeholder="Add a comment..."
               className="w-full p-3 rounded-lg mb-2 bg-base-100 text-base-content border border-base-300"
               rows="3"
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
             ></textarea>
             <button
               type="submit"
+              disabled={commentMutation.isPending}
               className="btn btn-primary btn-sm"
             >
-              Post Comment
+              {commentMutation.isPending ? "Posting..." : "Post Comment"}
             </button>
           </form>
         ) : (

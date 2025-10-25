@@ -3,41 +3,52 @@ import { AuthContext } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAppTheme } from '../hooks/useAppTheme';
 import { Link } from 'react-router';
+import { useQuery } from '@tanstack/react-query';
 
 const UserDashboard = () => {
   const { user } = useContext(AuthContext);
   const { theme } = useTheme();
   const { getColor } = useAppTheme();
-  const [userData, setUserData] = useState(null);
-  const [userStats, setUserStats] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (user?.email) {
-      // Fetch user gamification data
-      fetch(`${import.meta.env.VITE_API_URL}/user/profile/${user.email}`)
-        .then(res => res.json())
-        .then(data => {
-          setUserData(data);
-        })
-        .catch(error => {
-          console.error('Error fetching user data:', error);
-        });
+  // Fetch user gamification data with TanStack Query
+  const { data: userData, isLoading: userDataLoading, isError: userDataError } = useQuery({
+    queryKey: ['userProfile', user?.email],
+    queryFn: async () => {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/user/profile/${user.email}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+      return response.json();
+    },
+    enabled: !!user?.email,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
-      // Fetch user statistics
-      fetch(`${import.meta.env.VITE_API_URL}/user/stats/${user.email}`)
-        .then(res => res.json())
-        .then(data => {
-          setUserStats(data);
-        })
-        .catch(error => {
-          console.error('Error fetching user stats:', error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  }, [user]);
+  // Fetch user statistics with TanStack Query
+  const { data: userStats, isLoading: userStatsLoading, isError: userStatsError } = useQuery({
+    queryKey: ['userStats', user?.email],
+    queryFn: async () => {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/user/stats/${user.email}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch user stats');
+      }
+      return response.json();
+    },
+    enabled: !!user?.email,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const loading = userDataLoading || userStatsLoading;
+
+  // Calculate progress percentage for level
+  const calculateLevelProgress = (points) => {
+    const level = Math.floor(points / 100) + 1;
+    const pointsInCurrentLevel = points % 100;
+    const progressPercentage = (pointsInCurrentLevel / 100) * 100;
+    return { level, pointsInCurrentLevel, progressPercentage };
+  };
+
+  const levelData = userData?.points ? calculateLevelProgress(userData.points) : { level: 1, pointsInCurrentLevel: 0, progressPercentage: 0 };
 
   if (loading) {
     return (
@@ -50,15 +61,15 @@ const UserDashboard = () => {
     );
   }
 
-  // Calculate progress percentage for level
-  const calculateLevelProgress = (points) => {
-    const level = Math.floor(points / 100) + 1;
-    const pointsInCurrentLevel = points % 100;
-    const progressPercentage = (pointsInCurrentLevel / 100) * 100;
-    return { level, pointsInCurrentLevel, progressPercentage };
-  };
-
-  const levelData = userData?.points ? calculateLevelProgress(userData.points) : { level: 1, pointsInCurrentLevel: 0, progressPercentage: 0 };
+  if (userDataError || userStatsError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-base-200">
+        <div className="text-center">
+          <p className="text-error">Error loading dashboard data. Please try again later.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-base-200 py-8">
