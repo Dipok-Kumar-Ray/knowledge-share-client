@@ -12,7 +12,7 @@ const Home = () => {
       {/* <TopContributors/> */}
       <FeaturedMentors/>
       <FeaturedArticles/>
-      <CategoryArticles/>
+      <CategoryArticles />
     </div>
   );
 };

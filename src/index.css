@@ -1,16 +1,65 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+:root {
+  --light-bg: #f9fafb;
+  --dark-bg: #111827;
+  --light-text: #111827;
+  --dark-text: #f9fafb;
+  --primary-light: #3b82f6;
+  --primary-dark: #60a5fa;
+  --secondary-light: #10b981;
+  --secondary-dark: #34d399;
+}
 
+/* Custom styles for gamification badges */
+.badge-gold {
+  background-color: #FFD700;
+  color: #000;
+}
 
+.badge-silver {
+  background-color: #C0C0C0;
+  color: #000;
+}
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+.badge-bronze {
+  background-color: #CD7F32;
+  color: #fff;
+}
 
-@layer base {
-    html {
-        @apply transition-colors duration-300
-    }
-    body {
-        @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100;
-    }
+/* Existing styles */
+.active {
+  @apply text-[#008080] font-bold border-b-2 border-[#008080];
+}
+
+/* DaisyUI theme configuration */
+[data-theme="light"] {
+  --p: #3b82f6;
+  --s: #10b981;
+  --a: #8b5cf6;
+  --n: #111827;
+  --b1: #ffffff;
+  --b2: #f3f4f6;
+  --b3: #e5e7eb;
+  --bc: #111827;
+  --pc: #1d4ed8;
+  --sc: #047857;
+  --ac: #6b21a8;
+  --nc: #f9fafb;
+}
+
+[data-theme="dark"] {
+  --p: #60a5fa;
+  --s: #34d399;
+  --a: #a78bfa;
+  --n: #1f2937;
+  --b1: #111827;
+  --b2: #1f2937;
+  --b3: #374151;
+  --bc: #f9fafb;
+  --pc: #3b82f6;
+  --sc: #10b981;
+  --ac: #8b5cf6;
+  --nc: #f3f4f6;
 }

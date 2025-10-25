@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router";
+import { useTheme } from "../contexts/ThemeContext";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
@@ -8,6 +9,7 @@ const MyArticles = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,7 +36,7 @@ const MyArticles = () => {
   // Loading spinner
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
+      <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900">
         <span className="loading loading-bars loading-xl text-primary"></span>
       </div>
     );
@@ -75,12 +77,12 @@ const MyArticles = () => {
   };
 
   return (
-    <div className="w-11/12 mx-auto my-10">
+    <div className="w-11/12 mx-auto my-10 bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
       <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-primary dark:text-blue-400">
         My Articles
       </h1>
 
-      <div className="overflow-x-auto rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+      <div className="overflow-x-auto rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300 bg-white dark:bg-gray-800">
         <table className="min-w-full text-sm md:text-base">
           <thead className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
             <tr>

@@ -8,7 +8,7 @@ const Motion = () => {
 
   return (
     // Added top padding to perfectly offset fixed navbar
-    <section className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white flex flex-col items-center justify-center min-h-screen pt-32 md:pt-36 px-5 mt-19 overflow-hidden">
+    <section className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white flex flex-col items-center justify-center min-h-screen pt-32 md:pt-36 overflow-hidden">
       {/* Animated Heading */}
       <motion.h1
         className="text-4xl md:text-6xl font-extrabold text-center mb-4 leading-tight"

@@ -12,73 +12,83 @@ import PostArticles from "../components/PostArticles";
 import MyArticles from "../pages/MyArticles";
 import AboutUs from "../pages/AboutUs";
 import ContactSection from "../shared/ContactSection";
+import CategoryArticles from "../pages/CategoryArticles";
+import UserDashboard from "../components/UserDashboard";
+import Leaderboard from "../components/Leaderboard";
 
-
-
-
- const router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: '/',
-    Component: MainLayout,
+    element: <MainLayout />,
     children: [
       {
         index: true,
-        Component: Home,
-        loader:() =>  fetch('https://eduhive-server-side.vercel.app'),
+        element: <Home />,
+        loader:() =>  fetch(`${import.meta.env.VITE_API_URL}`),
         hydrateFallbackElement: <span className="loading loading-bars loading-xl"></span>
       },
       {
         path: 'login',
-        Component: Login
+        element: <Login />
       },
       {
         path:'register',
-        Component: Register,
+        element: <Register />,
       }, 
       {
         path:'postArticles',
         element: <PrivateRoute><PostArticles></PostArticles></PrivateRoute>
-
       },
       {
         path: 'allArticle',
-        Component: AllArticle,
-
+        element: <AllArticle />,
       },
       {
         path:'articleDetails/:id',
-        Component: ArticleDetailsPage
+        element: <ArticleDetailsPage />
       },
       {
         path: 'myArticles',
-        loader: () => fetch('https://eduhive-server-side.vercel.app/myArticles'),
+        loader: () => fetch(`${import.meta.env.VITE_API_URL}/myArticles`),
         hydrateFallbackElement: <span className="loading loading-bars loading-xl"></span>,
         element: <PrivateRoute><MyArticles></MyArticles></PrivateRoute>
       },
       {
         path: 'updateArticle/:id',
-        Component: UpdateArticle,
-        loader: ({params}) => fetch(`https://eduhive-server-side.vercel.app/articles/${params.id}`),
+        element: <UpdateArticle />,
+        loader: ({params}) => fetch(`${import.meta.env.VITE_API_URL}/articles/${params.id}`),
         hydrateFallbackElement: <span className="loading loading-bars loading-xl"></span>
       },
       {
+        path: 'dashboard',
+        element: <PrivateRoute><UserDashboard /></PrivateRoute>
+      },
+      {
+        path: 'leaderboard',
+        element: <Leaderboard />
+      },
+      {
         path: 'aboutUs',
-        Component: AboutUs,
+        element: <AboutUs />,
       },
       {
         path: 'contact',
-        Component: ContactSection,
+        element: <ContactSection />,
+      },
+      {
+        path: 'category',
+        element: <CategoryArticles />,
+      },
+      {
+        path: 'category/:categoryName',
+        element: <CategoryArticles />,
       }
-      
     ]
-    
   },
   {
     path: '*',
-    Component: ErrorPage,
+    element: <ErrorPage />,
   }
-
-])
-
+]);
 
 export default router;
